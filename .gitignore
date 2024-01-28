@@ -3,3 +3,5 @@ config/
 
 # Ignore config files
 config/*
+
+config.json
