@@ -1,7 +1,1 @@
-# Ignore config folder
-config/config.json
-
-# Ignore config files
-config/*
-
-config.json
+*json
