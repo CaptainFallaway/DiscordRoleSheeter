@@ -1,0 +1,5 @@
+# Ignore config folder
+config/
+
+# Ignore config files
+config/*
