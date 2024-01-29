@@ -1,4 +1,4 @@
-import json
+import json  # noqa E402
 import requests
 
 
