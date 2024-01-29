@@ -46,22 +46,21 @@ def get_text_color(hex_color):
 
 base_fmt = {
     'bold': True,
-    'font_size': 12,
+    'font_size': 11,
     'align': 'center',
     'valign': 'center',
-    'bottom': 2,
+    'bottom': 1,
+    'border_color': "#ABABAB"
 }
 
 
-workbook = xlsxwriter.Workbook('checkbox_example.xlsm')
+workbook = xlsxwriter.Workbook('checkbox_example.xlsx')
 worksheet = workbook.add_worksheet("Roles")
-
-workbook.add_vba_project('./bin/togglebtn.bin')
 
 with open("./tests/samples/ers.json", "r") as f:
     content = json.load(f)
     roles = [Role(**role) for role in content]
-    # for i in range(2):
+    # for _ in range(3):
     #     roles.extend(roles)
 
 with open("./tests/samples/members.json", "r") as f:
@@ -73,12 +72,13 @@ with open("./tests/samples/members.json", "r") as f:
             members
         )
     )
-    for i in range(2):
+    members = sorted(members, key=lambda member: len(member.roles))[::-1]
+    for _ in range(3):
         members.extend(members)
 
 fmt = workbook.add_format({
     **base_fmt,
-    'bg_color': "#EEEAEA",
+    'fg_color': "#EEEEEE",
 })
 
 worksheet.write_string(0, 0, "Name", fmt)
@@ -86,7 +86,7 @@ for i, role in enumerate(roles):
     _format = workbook.add_format(
         {
             **base_fmt,
-            'bg_color': role.color,
+            'fg_color': role.color,
             'font_color': get_text_color(role.color),
         }
     )
@@ -94,29 +94,22 @@ for i, role in enumerate(roles):
 
 for i, member in enumerate(members):
     fmt = workbook.add_format()
-    if i % 2 == 0:
-        fmt.set_bg_color("#EEEAEA")
-    else:
-        fmt.set_bg_color("#F8F4F4")
+    fg = "#FFFFFF" if i % 2 == 0 else "#EEEEEE"
+    fmt.set_fg_color(fg)
 
     worksheet.write_string(i+1, 0, member.user.username, fmt)
     for j, role in enumerate(roles):
-        CC_FALSE = {'macro': 'ToggleBtn', 'caption': "—", 'color': role.color}
-        CC_TRUE = {'macro': 'ToggleBtn', 'caption': "✓", 'color': role.color}
-        worksheet.insert_button(i+1, j+1, CC_TRUE if role.id in member.roles else CC_FALSE,)
+        text = workbook.add_format({
+            'align': 'center',
+            'valign': 'center',
+            'right': 1,
+            'left': 1,
+            'border_color': "#ABABAB",
+        })
+        text.set_fg_color(fg)
+        text.set_font_color(role.color)
 
-worksheet.autofit()
-
-worksheet = workbook.add_worksheet("Raw Data")
-
-worksheet.write(0, 0, "Name")
-for i, role in enumerate(roles):
-    worksheet.write_string(0, i+1, role.name)
-
-for i, member in enumerate(members):
-    worksheet.write_string(i+1, 0, member.user.username)
-    for j, role in enumerate(roles):
-        worksheet.write_number(i+1, j+1, 1 if role.id in member.roles else 0)
+        worksheet.write_number(i+1, j+1, int(role.id in member.roles), text)
 
 worksheet.autofit()
 
