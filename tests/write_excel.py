@@ -78,7 +78,7 @@ with open("./tests/samples/members.json", "r") as f:
 
 fmt = workbook.add_format({
     **base_fmt,
-    'fg_color': "#EEEEEE",
+    'fg_color': "#C2C2C2",
 })
 
 worksheet.write_string(0, 0, "Name", fmt)
@@ -94,7 +94,7 @@ for i, role in enumerate(roles):
 
 for i, member in enumerate(members):
     fmt = workbook.add_format()
-    fg = "#FFFFFF" if i % 2 == 0 else "#EEEEEE"
+    fg = "#D2D2D2" if i % 2 == 0 else "#C2C2C2"
     fmt.set_fg_color(fg)
 
     worksheet.write_string(i+1, 0, member.user.username, fmt)
@@ -105,6 +105,7 @@ for i, member in enumerate(members):
             'right': 1,
             'left': 1,
             'border_color': "#ABABAB",
+            'bold': True,
         })
         text.set_fg_color(fg)
         text.set_font_color(role.color)
