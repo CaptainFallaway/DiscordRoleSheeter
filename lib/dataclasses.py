@@ -55,3 +55,24 @@ class Member(BaseModel):
 
     roles: list[SnowFlake]  # NOTE maybe a list of Role objects?
     user: User
+
+
+class Resp(BaseModel):
+    """
+    Response object
+
+    properties:
+        ok: int
+        status: int
+        json: dict | None
+
+    description:
+        ok -> True if status is 200, else False
+        status -> HTTP status code
+        json -> json response from Discord API. in our case a dict means no no happend.
+
+    """
+
+    ok: bool
+    status: int
+    json: list | dict
