@@ -27,7 +27,8 @@ class RootWidget(GridLayout):
         self.add_widget(self.btn2)
 
     def async_wrapper(self, func, *args, **kwargs):
-        asyncio.create_task(func(*args, **kwargs))
+        loop = asyncio.get_event_loop()
+        loop.create_task(func(*args, **kwargs))
 
 
 class MainApp(App):
