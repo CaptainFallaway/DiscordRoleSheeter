@@ -1,0 +1,13 @@
+#:kivy 2.3.0
+
+<RootWidget>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Hello World'
+        Button:
+            text: 'Click me'
+            on_press: root.on_btn_press(self)
+        Button:
+            text: 'Click me'
+            on_press: root.on_btn_press_2(self)

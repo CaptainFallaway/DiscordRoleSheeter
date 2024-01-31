@@ -1,64 +1,64 @@
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
+from kivy.lang import Builder
+from kivy.uix.widget import Widget
 
 import asyncio
-from typing import Any
+from typing import Any, Coroutine
 from lib.discordrolemanager import DiscordRoleManager  # Model
 
 GUILD = "341280708377051137"
 
 
-class RootWidget(GridLayout):
-    # View
+class RootWidget(Widget):
+    """Root widget for the app
 
-    def __init__(self, root_node: 'MainApp', **kwargs):
-        super().__init__(**kwargs)
+    This is a Presenter in the MVP pattern.
+    """
 
-        self.cols = 2
-
-        self.btn1 = Button(text='Roles')
-        self.btn1.bind(
-            on_press=lambda instance: self.async_wrapper(root_node.on_press_1, instance)
-            )
-        self.add_widget(self.btn1)
-
-        self.btn2 = Button(text='Members')
-        self.btn2.bind(
-            on_press=lambda instance: self.async_wrapper(root_node.on_press_2, instance)
-            )
-        self.add_widget(self.btn2)
-
-    def async_wrapper(self, func, *args, **kwargs):
-        loop = asyncio.get_event_loop()
-        loop.create_task(func(*args, **kwargs))
-
-
-class MainApp(App):
-    # Presenter
-
-    def __init__(self, **kwargs: Any):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.drm = DiscordRoleManager(GUILD)
+        self.start()
 
-    def build(self):
-        self.title = "Discord Role Manager"
-        return RootWidget(self)
+    def async_func(func: Coroutine) -> None:
+        """Decorator for running async functions in a sync context"""
 
-    async def on_press_1(self, instance):
+        def wrapper(instance: Any, *args, **kwargs) -> None:
+            loop = asyncio.get_event_loop()
+            loop.create_task(func(instance, *args, **kwargs))
+
+        return wrapper
+
+    @async_func
+    async def start(self) -> None:
+        ...
+
+    @async_func
+    async def on_btn_press(self, instance: Button) -> None:
         roles = await self.drm.get_roles()
         print(roles)
 
-    async def on_press_2(self, instance):
+    @async_func
+    async def on_btn_press_2(self, instance: Button) -> None:
         members = await self.drm.get_members()
         print(members)
 
 
+class MainApp(App):
+    def build(self) -> RootWidget:
+        self.title = "Discord Role Manager"
+        return RootWidget()
+
+
 if __name__ == '__main__':
     app = MainApp()
+    Builder.load_file("kv/main.kv")
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
     try:
         loop.run_until_complete(app.async_run())
