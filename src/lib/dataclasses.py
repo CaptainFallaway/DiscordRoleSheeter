@@ -75,4 +75,4 @@ class Resp(BaseModel):
 
     ok: bool
     status: int
-    json: list | dict
+    json_data: list | dict

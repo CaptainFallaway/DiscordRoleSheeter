@@ -19,13 +19,13 @@ class DiscordRoleManager:
         async with ClientSession() as session:
             async with session.get(f"{self.API_URI}{endpoint}", json=json_data, headers=self.HEADERS) as resp:
                 json_data = await resp.json()
-                return Resp(ok=resp.ok, status=resp.status, json=json_data)
+                return Resp(ok=resp.ok, status=resp.status, json_data=json_data)
 
     async def get_roles(self) -> list[Role]:
         resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/roles")
 
         if resp.ok:
-            return [Role(**role) for role in resp.json if not role["managed"] and role['name'] != "@everyone"]
+            return [Role(**role) for role in resp.json_data if not role["managed"] and role['name'] != "@everyone"]
         else:
             # TODO handle error
             ...
@@ -34,7 +34,7 @@ class DiscordRoleManager:
         resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/members?limit=1000")
 
         if resp.ok:
-            return [Member(**member) for member in resp.json]
+            return [Member(**member) for member in resp.json_data]
         else:
             # TODO handle error
             ...
