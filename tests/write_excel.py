@@ -50,7 +50,7 @@ base_fmt = {
     'align': 'center',
     'valign': 'center',
     'bottom': 1,
-    'border_color': "#ABABAB"
+    'border_color': "#ABABAB",
 }
 
 
