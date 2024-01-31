@@ -1,14 +1,17 @@
-import asyncio
-from typing import Any
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
-from lib.discordrolemanager import DiscordRoleManager
+
+import asyncio
+from typing import Any
+from lib.discordrolemanager import DiscordRoleManager  # Model
 
 GUILD = "341280708377051137"
 
 
 class RootWidget(GridLayout):
+    # View
+
     def __init__(self, root_node: 'MainApp', **kwargs):
         super().__init__(**kwargs)
 
@@ -32,12 +35,15 @@ class RootWidget(GridLayout):
 
 
 class MainApp(App):
+    # Presenter
+
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
 
         self.drm = DiscordRoleManager(GUILD)
 
     def build(self):
+        self.title = "Discord Role Manager"
         return RootWidget(self)
 
     async def on_press_1(self, instance):
@@ -53,5 +59,15 @@ if __name__ == '__main__':
     app = MainApp()
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(app.async_run())
+
+    try:
+        loop.run_until_complete(app.async_run())
+    except KeyboardInterrupt:
+        while True:
+            try:
+                app.stop()
+                break
+            except KeyboardInterrupt:
+                pass
+
     loop.close()
