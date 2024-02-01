@@ -1,7 +1,7 @@
 from kivy.app import App
-from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
 from kivy.lang import Builder
+from kivy.config import Config
+from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
 import asyncio
@@ -17,11 +17,12 @@ class RootWidget(Widget):
     This is a Presenter in the MVP pattern.
     """
 
+    ASPECT_RATIO = 14 / 5  # TODO Imlpement this
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.drm = DiscordRoleManager(GUILD)
-        self.start()
 
     def async_func(func: Coroutine) -> None:
         """Decorator for running async functions in a sync context"""
@@ -31,10 +32,6 @@ class RootWidget(Widget):
             loop.create_task(func(instance, *args, **kwargs))
 
         return wrapper
-
-    @async_func
-    async def start(self) -> None:
-        ...
 
     @async_func
     async def on_btn_press(self, instance: Button) -> None:
@@ -54,6 +51,9 @@ class MainApp(App):
 
 
 if __name__ == '__main__':
+    Config.set('graphics', 'width', '700')
+    Config.set('graphics', 'height', '250')
+
     app = MainApp()
     Builder.load_file("kv/main.kv")
 
