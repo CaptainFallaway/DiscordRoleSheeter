@@ -23,15 +23,22 @@ class View(Widget):
 
     @sync_to_async_wrapper
     async def pull(self) -> None:
-        self.presenter.pull()
+        await self.presenter.pull()
 
     @sync_to_async_wrapper
     async def push(self) -> None:
-        self.presenter.push()
+        await self.presenter.push()
 
     @sync_to_async_wrapper
     async def refresh(self) -> None:
-        self.presenter.refresh()
+        await self.presenter.refresh()
 
-    async def update_timestamp(self) -> None:
-        self.ids.status_panel.ids.tim
+    async def update_timestamp(self, text: str) -> None:
+        self.ids.status_panel.ids.lbl_timestamp.text = text
+
+    async def update_status(self, text: str) -> None:
+        self.ids.status_panel.ids.scrollable_text_container.ids.lbl_status.text = text
+
+    async def show_popup(self, title: str, text: str) -> None:
+        # TODO Implement popup for errors and warnings
+        ...
