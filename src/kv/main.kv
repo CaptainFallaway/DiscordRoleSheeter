@@ -1,80 +1,126 @@
 #:kivy 2.3.0
 
+<Seperator@FloatLayout>:
+    canvas.before:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Line:
+            points: self.x, self.y + 20, self.x, self.y + self.height - 20
+            width: 1
+        Line:
+            points: self.x + 1, self.y + 20, self.x + 1, self.y + self.height - 20
+            width: 1
+
 
 <ScrollableTextContainer@ScrollView>:
-    orientation: 'vertical'
-    
-    # Create a ScrollView
-    ScrollView:
-        size_hint: (1, None)
-        size: (400, 400)
+    # orientation: 'vertical'
 
-        canvas.before:
-            Color:
-                rgba: 1, 0.2, 0.2, 1
-            RoundedRectangle:
-                pos: (12, 12)
-                size: (20, 20)
-                radius: [20, 20, 20, 20]
+    canvas.before:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [5]
 
-        # Create a Label as a child of the ScrollView
-        Label:
-            id: text_label
-            text: '<username>: ++++\n<username>: ----\n<username>: ++--'
-            size_hint_y: None
-            height: self.texture_size[1]
-            markup: True
+    # Create a Label as a child of the ScrollView
+    Label:
+        id: lbl_status
+        text: '<username>: [color=00ff00]+++++[/color]'
+        size_hint: (None, None)
+        size: (self.texture_size[0] + 20, self.texture_size[1] + 5)
+        markup: True
+        color: 0.65, 0.65, 0.65, 1
+        align: 'left'
 
 
 <RoundedButton@Button>:
     background_color: 0, 0, 0, 0
-    padding: 10, 10
+    color: 0.9, 0.9, 0.9, 1
 
     canvas.before:
         Color:
-            rgba: (0.2, 0.6, 1, 1) if self.state == 'normal' else (0.1, 0.5, 0.9, 1)
+            rgba: (75/255, 82/255, 196/255, 1) if self.state == 'normal' else (60/255, 65/255, 156/255, 1)
         RoundedRectangle:
-            pos: (self.pos[0] + 5, self.pos[1] + 5)
-            size: (self.width - 10, self.height - 10)
-            radius: [10,]
+            pos: self.pos
+            size: self.size
+            radius: [5,]
 
 
 <ButtonPanel@BoxLayout>:
     orientation: 'vertical'
 
-    RoundedButton:
-        text: 'Button 1'
-        padding: 10, 10
+    size_hint: (0.6, 1)
+    padding: 10
+    spacing: 10
 
     RoundedButton:
-        text: 'Button 2'
-        padding: 10, 10
+        id: btn_pull
+        text: 'Pull'
+        on_press: root.parent.parent.pull()
+
+    RoundedButton:
+        id: btn_push
+        text: 'Push'
+        on_press: root.parent.parent.push()
 
 
 <StatusPanel@BoxLayout>:
     orientation: 'vertical'
+
     size_hint: (1, 1)
+    padding: 10
+    spacing: 15
 
     Label:
-        text: 'Status'
+        text: 'Edits:'
         size_hint: (1, 0.1)
+        color: 0.65, 0.65, 0.65, 1
+        bold: True
 
     ScrollableTextContainer:
         id: scrollable_text_container
-        size_hint: (1, 0.9)
+        padding: 10
+
+    Label:
+        text: 'Latest pull:'
+        size_hint: (1, 0.1)
+        color: 0.65, 0.65, 0.65, 1
+        bold: True
+
+    Label:
+        id: lbl_timestamp
+        text: 'No date available'
+        size_hint: (1, 0.1)
+        color: 0.65, 0.65, 0.65, 1
+
+    RoundedButton:
+        text: "Refresh"
+        size_hint: (1, 0.25)
+        on_press: root.parent.parent.refresh()
 
 
-<RootWidget>:
-    background_color: 0.1, 0.1, 0.1, 1
-
+<View>:
     BoxLayout:
         orientation: 'horizontal'
         size: root.width, root.height
 
+        padding: 6
+        spacing: 2
+
+        # Background
+        canvas.before:
+            Color:
+                rgba: 0.1, 0.1, 0.1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
         ButtonPanel:
             id: button_panel
 
+        Seperator:
+            size_hint: (0.0001, 1)
+
         StatusPanel:
             id: status_panel
-
-        
