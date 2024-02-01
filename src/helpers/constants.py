@@ -1,0 +1,4 @@
+WINDOW_SIZE = (700, 250)
+DISCORD_GUILD = "341280708377051137"
+ICON_PATH = "src/assets/icon.ico"
+WINDOW_TITLE = "Discord Role Manager"
