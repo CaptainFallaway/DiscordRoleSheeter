@@ -1,5 +1,5 @@
 from aiohttp import ClientSession
-from .dataclasses import Member, Role, Resp
+from helpers.dataclasses import Member, Role, Resp
 
 
 class DiscordRoleManager:

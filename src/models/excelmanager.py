@@ -1,7 +1,7 @@
 import openpyxl
 import xlsxwriter
 
-from .dataclasses import Member, Role
+from helpers.dataclasses import Member, Role
 
 
 class ExcelManager:

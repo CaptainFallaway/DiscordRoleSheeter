@@ -1,5 +1,5 @@
 import openpyxl
 
-from src.lib.dataclasses import Member, Role  # noqa
+from src.helpers.dataclasses import Member, Role  # noqa
 
 workbook = openpyxl.Workbook("./tests/samples/test.xlsx")
