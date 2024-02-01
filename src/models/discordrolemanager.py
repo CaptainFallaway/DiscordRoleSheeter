@@ -1,28 +1,20 @@
 from aiohttp import ClientSession
+from helpers.constants import API_URI, GUILD, HEADERS
 from helpers.dataclasses import Member, Role, Resp
 
 
 class DiscordRoleManager:
-    API_URI = "https://discord.com/api/v10"
-
-    TOKEN = "MTE5NzY0NjYwOTA0ODE1ODMzMA.GZVCNG.ps32lXOUnU0WdcEsfzh8ARYfGjvWEeShFwj0kE"
-
-    HEADERS = {
-            'authorization': f"Bot {TOKEN}",
-            'Content-Type': 'application/json'
-        }
-
-    def __init__(self, guild_id: str) -> None:
-        self.guild_id = guild_id
+    def __init__(self) -> None:
+        ...
 
     async def _dc_req(self, method: str, endpoint: str, json_data: dict | None = None) -> Resp:
         async with ClientSession() as session:
-            async with session.get(f"{self.API_URI}{endpoint}", json=json_data, headers=self.HEADERS) as resp:
+            async with session.get(f"{API_URI}{endpoint}", json=json_data, headers=HEADERS) as resp:
                 json_data = await resp.json()
                 return Resp(ok=resp.ok, status=resp.status, json_data=json_data)
 
     async def get_roles(self) -> list[Role]:
-        resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/roles")
+        resp = await self._dc_req("GET", f"/guilds/{GUILD}/roles")
 
         if resp.ok:
             return [Role(**role) for role in resp.json_data if not role["managed"] and role['name'] != "@everyone"]
@@ -31,7 +23,7 @@ class DiscordRoleManager:
             ...
 
     async def get_members(self) -> list[Member]:
-        resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/members?limit=1000")
+        resp = await self._dc_req("GET", f"/guilds/{GUILD}/members?limit=1000")
 
         if resp.ok:
             return [Member(**member) for member in resp.json_data]
