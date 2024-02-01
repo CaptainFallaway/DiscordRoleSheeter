@@ -1,13 +1,80 @@
 #:kivy 2.3.0
 
-<RootWidget>:
-    BoxLayout:
-        orientation: 'vertical'
+
+<ScrollableTextContainer@ScrollView>:
+    orientation: 'vertical'
+    
+    # Create a ScrollView
+    ScrollView:
+        size_hint: (1, None)
+        size: (400, 400)
+
+        canvas.before:
+            Color:
+                rgba: 1, 0.2, 0.2, 1
+            RoundedRectangle:
+                pos: (12, 12)
+                size: (20, 20)
+                radius: [20, 20, 20, 20]
+
+        # Create a Label as a child of the ScrollView
         Label:
-            text: 'Hello World'
-        Button:
-            text: 'Click me'
-            on_press: root.on_btn_press(self)
-        Button:
-            text: 'Click me'
-            on_press: root.on_btn_press_2(self)
+            id: text_label
+            text: '<username>: ++++\n<username>: ----\n<username>: ++--'
+            size_hint_y: None
+            height: self.texture_size[1]
+            markup: True
+
+
+<RoundedButton@Button>:
+    background_color: 0, 0, 0, 0
+    padding: 10, 10
+
+    canvas.before:
+        Color:
+            rgba: (0.2, 0.6, 1, 1) if self.state == 'normal' else (0.1, 0.5, 0.9, 1)
+        RoundedRectangle:
+            pos: (self.pos[0] + 5, self.pos[1] + 5)
+            size: (self.width - 10, self.height - 10)
+            radius: [10,]
+
+
+<ButtonPanel@BoxLayout>:
+    orientation: 'vertical'
+
+    RoundedButton:
+        text: 'Button 1'
+        padding: 10, 10
+
+    RoundedButton:
+        text: 'Button 2'
+        padding: 10, 10
+
+
+<StatusPanel@BoxLayout>:
+    orientation: 'vertical'
+    size_hint: (1, 1)
+
+    Label:
+        text: 'Status'
+        size_hint: (1, 0.1)
+
+    ScrollableTextContainer:
+        id: scrollable_text_container
+        size_hint: (1, 0.9)
+
+
+<RootWidget>:
+    background_color: 0.1, 0.1, 0.1, 1
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size: root.width, root.height
+
+        ButtonPanel:
+            id: button_panel
+
+        StatusPanel:
+            id: status_panel
+
+        
