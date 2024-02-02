@@ -1,0 +1,27 @@
+#:kivy 2.3.0
+
+#:include kv/roundedbutton.kv
+
+<WarningPopupContent@BoxLayout>:
+    orientation: "vertical"
+    spacing: 8
+
+    Label:
+        id: lbl_text
+        text: ''
+        markup: True
+    RoundedButton:
+        text: "OK"
+        on_release: root.parent.parent.parent.dismiss()
+
+<WarningPopup>:
+    separator_color: 0.5, 0.5, 0.5, 1
+    background_color: 0, 0, 0, 0
+    auto_dismiss: False
+    size_hint: 0.5, 0.5
+
+    title: root.title
+    title_align: "center"
+
+    WarningPopupContent:
+        id: warning_content
