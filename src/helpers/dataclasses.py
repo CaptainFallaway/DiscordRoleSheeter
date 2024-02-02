@@ -40,7 +40,6 @@ class User(BaseModel):
 
     id: SnowFlake
     username: str
-    global_name: str | None
     bot: bool = Field(default=False, alias="bot")
 
 
@@ -87,3 +86,31 @@ class ErrorInfo(BaseModel):
     """
 
     message: str
+
+
+class ExcelMember(BaseModel):
+    """
+    Describes a member from the excel sheet
+
+    properties:
+        user_id: SnowFlake
+        roles: list[str]
+    """
+
+    user_id: SnowFlake
+    roles: list[str]
+
+
+class MemberChanges(BaseModel):
+    """
+    Descibes a members changes from the excel sheet
+
+    properties:
+        user_id: SnowFlake
+        added_roles: list[SnowFlake] = []
+        removed_roles: list[SnowFlake] = []
+    """
+
+    user_id: SnowFlake
+    added_roles: list[SnowFlake] = []
+    removed_roles: list[SnowFlake] = []
