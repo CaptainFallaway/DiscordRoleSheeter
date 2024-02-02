@@ -37,7 +37,9 @@ class Presenter:
 
         if resp is False:
             await self.view.show_popup("Excel Error", "Please close excel file and try again.")
+            return
 
+        await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!")
         await self.view.update_changes("No changes")
 
     async def push(self) -> None:
@@ -49,7 +51,20 @@ class Presenter:
             await self.view.show_popup("Excel Error", resp.message)
             return
 
-        # TODO: push to discord
+        approx_time = 0
+        for change in resp.changes:
+            approx_time += len(change.added_roles) + len(change.removed_roles)
+        approx_time += 10
+
+        await self.view.show_popup("Status", f"Applying changes... ~{approx_time} seconds)")
+
+        discord_resp = await self.drm.apply_changes(resp.changes)
+
+        if isinstance(discord_resp, ErrorInfo):
+            await self.view.show_popup("Discord Error", discord_resp.message)
+            return
+
+        await self.view.show_popup("Success", "Changes have been applied! See discord or pull again.")
 
     async def refresh(self) -> None:
         resp = await self.excelmanager.read()
