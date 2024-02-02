@@ -16,8 +16,6 @@ class DiscordRoleManager:
                     rate_headers = DiscordRateLimitHeaders(**dict(resp.headers))
 
                     if rate_headers.remaining == 0:
-                        print(f"Rate limit reached, waiting for {rate_headers.reset_after} seconds.")
-                        print(rate_headers)
                         await sleep(rate_headers.reset_after)
                         continue
 
