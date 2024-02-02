@@ -1,6 +1,17 @@
 from typing import Protocol
-from kivy.uix.widget import Widget
+from helpers.constants import POPUP_PATH
 from helpers.async_wrapper import sync_to_async_wrapper
+
+from kivy.uix.popup import Popup
+from kivy.uix.widget import Widget
+from kivy.lang.builder import Builder
+
+
+class WarningPopup(Popup):
+    def __init__(self, title: str, text: str, **kwargs):
+        super().__init__(**kwargs)
+        self.title = title
+        self.ids.warning_content.ids.lbl_text.text = text
 
 
 class Presenter(Protocol):
@@ -21,6 +32,8 @@ class View(Widget):
         super().__init__(**kwargs)
         self.presenter = presenter
 
+        Builder.load_file(POPUP_PATH)
+
     @sync_to_async_wrapper
     async def pull(self) -> None:
         await self.presenter.pull()
@@ -39,6 +52,7 @@ class View(Widget):
     async def update_status(self, text: str) -> None:
         self.ids.status_panel.ids.scrollable_text_container.ids.lbl_status.text = text
 
-    async def show_popup(self, title: str, text: str) -> None:
-        # TODO Implement popup for errors and warnings
-        ...
+    async def show_warning_popup(self, title: str, text: str) -> None:
+        popup = WarningPopup(title, text)
+
+        popup.open()
