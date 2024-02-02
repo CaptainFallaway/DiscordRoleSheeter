@@ -57,7 +57,7 @@ class Member(BaseModel):
     user: User
 
 
-class Resp(BaseModel):
+class DiscordResp(BaseModel):
     """
     Response object
 
@@ -129,3 +129,18 @@ class ExcelReadResponse(BaseModel):
 
     date: datetime
     changes: list[MemberChanges]
+
+
+class DiscordRateLimitHeaders(BaseModel):
+    """
+    DiscordRateLimitHeaders object
+
+    properties:
+        "x-ratelimit-limit": int
+        "x-ratelimit-remaining": int
+        "x-ratelimit-reset-after": float
+    """
+
+    limit: int = Field(alias="x-ratelimit-limit")
+    remaining: int = Field(alias="x-ratelimit-remaining")
+    reset_after: float = Field(alias="x-ratelimit-reset-after")
