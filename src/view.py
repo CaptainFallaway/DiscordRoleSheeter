@@ -57,7 +57,7 @@ class View(Widget):
             title: str,
             text: str,
             color: Literal["red"] | Literal["green"] | Literal["yellow"]
-            ) -> None:
+            ) -> WarningPopup:
         popup = WarningPopup(title, text)
 
         match color:
@@ -69,3 +69,5 @@ class View(Widget):
                 popup.separator_color = (1, 1, 0, 1)
 
         popup.open()
+
+        return popup
