@@ -64,13 +64,11 @@ class Presenter:
         for change in resp.changes:
             approx_time += len(change.added_roles) + len(change.removed_roles)
 
-        if approx_time < 10:
-            approx_time = 3
-        else:
+        if approx_time > 10:
             approx_time += 10
 
         status_popup = await self.view.show_popup(
-            "Status", f"Applying changes... (Approx ~{approx_time} seconds)", "yellow"
+            "Status", f"Applying changes... (Approx ±{approx_time} seconds)", "yellow"
             )
 
         discord_resp = await self.drm.apply_changes(resp.changes)
@@ -88,7 +86,7 @@ class Presenter:
         if isinstance(resp, ErrorInfo):
             await self.view.update_timestamp("N/A")
             await self.view.update_changes("N/A")
-            await self.view.show_popup("Excel Error", resp.message)
+            await self.view.show_popup("Excel Error", resp.message, "red")
             return
 
         _str = ""
