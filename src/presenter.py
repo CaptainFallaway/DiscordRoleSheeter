@@ -69,7 +69,9 @@ class Presenter:
         else:
             approx_time += 10
 
-        status_popup = await self.view.show_popup("Status", f"Applying changes... (Approx ~{approx_time} seconds)", "yellow")
+        status_popup = await self.view.show_popup(
+            "Status", f"Applying changes... (Approx ~{approx_time} seconds)", "yellow"
+            )
 
         discord_resp = await self.drm.apply_changes(resp.changes)
 
