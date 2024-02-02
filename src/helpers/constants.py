@@ -15,3 +15,9 @@ HEADERS = {
         'Content-Type': 'application/json'
     }
 GUILD = "341280708377051137"
+
+
+# Kivy Lang Path Constants
+
+VIEW_PATH = "src/kv/view.kv"
+POPUP_PATH = "src/kv/popup.kv"
