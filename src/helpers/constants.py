@@ -21,3 +21,8 @@ GUILD = "341280708377051137"
 
 VIEW_PATH = "src/kv/view.kv"
 POPUP_PATH = "src/kv/popup.kv"
+
+
+# Excel
+
+EXCEL_FILENAME = "roles.xlsx"
