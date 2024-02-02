@@ -11,6 +11,7 @@
         Label:
             id: lbl_text
             text: ''
+            font_size: 16
             align: "center"
             size_hint: (None, None)
             size: (self.texture_size[0] + 20, self.texture_size[1] + 20)
@@ -22,11 +23,12 @@
 
 <WarningPopup>:
     separator_color: 0.5, 0.5, 0.5, 1
-    background_color: 0, 0, 0, 0
+    background_color: 0, 0, 0, 0.1
     auto_dismiss: False
 
     title: root.title
     title_align: "center"
+    title_size: 20
 
     WarningPopupContent:
         id: warning_content
