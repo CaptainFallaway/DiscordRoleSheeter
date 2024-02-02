@@ -76,3 +76,14 @@ class Resp(BaseModel):
     ok: bool
     status: int
     json_data: list | dict
+
+
+class ErrorInfo(BaseModel):
+    """
+    ErrorInfo object
+
+    properties:
+        message: str
+    """
+
+    message: str
