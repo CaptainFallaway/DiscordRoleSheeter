@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Protocol, Literal
 from helpers.constants import POPUP_PATH
 from helpers.async_wrapper import sync_to_async_wrapper
 
@@ -52,6 +52,20 @@ class View(Widget):
     async def update_changes(self, text: str) -> None:
         self.ids.status_panel.ids.scrollable_text_container.ids.lbl_changes.text = text
 
-    async def show_popup(self, title: str, text: str) -> None:
+    async def show_popup(
+            self,
+            title: str,
+            text: str,
+            color: Literal["red"] | Literal["green"] | Literal["yellow"]
+            ) -> None:
         popup = WarningPopup(title, text)
+
+        match color:
+            case "red":
+                popup.separator_color = (1, 0, 0, 1)
+            case "green":
+                popup.separator_color = (0, 1, 0, 1)
+            case "yellow":
+                popup.separator_color = (1, 1, 0, 1)
+
         popup.open()

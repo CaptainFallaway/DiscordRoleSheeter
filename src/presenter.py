@@ -1,3 +1,4 @@
+import asyncio
 from view import View
 from models.excelmanager import ExcelManager
 from models.discordrolemanager import DiscordRoleManager
@@ -18,6 +19,10 @@ class Presenter:
         self.drm = DiscordRoleManager()
         self.excelmanager = ExcelManager()
 
+        # Auto refresh on startup
+        loop = asyncio.get_event_loop()
+        loop.create_task(self.refresh())
+
     async def pull(self) -> None:
         date = datetime.now()
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
@@ -26,20 +31,20 @@ class Presenter:
         members = await self.drm.get_members()
 
         if isinstance(roles, ErrorInfo):
-            await self.view.show_popup("Discord Error", roles.message)
+            await self.view.show_popup("Discord Error", roles.message, "red")
             return
 
         if isinstance(members, ErrorInfo):
-            await self.view.show_popup("Discord Error", members.message)
+            await self.view.show_popup("Discord Error", members.message, "red")
             return
 
         resp = await self.excelmanager.write(date, members, roles)
 
         if resp is False:
-            await self.view.show_popup("Excel Error", "Please close excel file and try again.")
+            await self.view.show_popup("Excel Error", "Please close excel file and try again.", "red")
             return
 
-        await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!")
+        await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!", "green")
         await self.view.update_changes("No changes")
 
     async def push(self) -> None:
@@ -48,7 +53,7 @@ class Presenter:
         if isinstance(resp, ErrorInfo):
             self.view.update_timestamp("N/A")
             self.view.update_changes("N/A")
-            await self.view.show_popup("Excel Error", resp.message)
+            await self.view.show_popup("Excel Error", resp.message, False)
             return
 
         approx_time = 0
@@ -56,15 +61,15 @@ class Presenter:
             approx_time += len(change.added_roles) + len(change.removed_roles)
         approx_time += 10
 
-        await self.view.show_popup("Status", f"Applying changes... ~{approx_time} seconds)")
+        await self.view.show_popup("Status", f"Applying changes... ~{approx_time} seconds)", "yellow")
 
         discord_resp = await self.drm.apply_changes(resp.changes)
 
         if isinstance(discord_resp, ErrorInfo):
-            await self.view.show_popup("Discord Error", discord_resp.message)
+            await self.view.show_popup("Discord Error", discord_resp.message, "red")
             return
 
-        await self.view.show_popup("Success", "Changes have been applied! See discord or pull again.")
+        await self.view.show_popup("Success", "Changes have been applied! See discord or pull again.", "green")
 
     async def refresh(self) -> None:
         resp = await self.excelmanager.read()
