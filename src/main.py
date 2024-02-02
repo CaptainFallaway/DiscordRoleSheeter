@@ -6,7 +6,7 @@ from kivy.core.window import Window
 
 from view import View
 from presenter import Presenter
-from helpers.constants import WINDOW_SIZE, ICON_PATH, WINDOW_TITLE
+from helpers.constants import WINDOW_SIZE, ICON_PATH, WINDOW_TITLE, VIEW_PATH
 
 
 class MainApp(App):
@@ -22,7 +22,7 @@ class MainApp(App):
         Window.bind(on_resize=lambda *_: Window._set_size(WINDOW_SIZE))  # Static window size
 
     def build(self) -> View:
-        self.load_kv("kv/main.kv")
+        self.load_kv(VIEW_PATH)
         self.icon = ICON_PATH
         self.title = WINDOW_TITLE
         presenter = Presenter()

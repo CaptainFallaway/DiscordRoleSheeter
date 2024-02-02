@@ -1,9 +1,12 @@
 import json
 import xlsxwriter
-from pydantic import BaseModel, model_validator, Field
+from datetime import datetime
 from typing import TypeAliasType
+from pydantic import BaseModel, model_validator, Field
 
 SnowFlake = TypeAliasType("SnowFlake", str)
+
+# TODO add a new sheet in the workbook for the role id's and a date of the last update.
 
 
 class Role(BaseModel):
@@ -113,5 +116,11 @@ for i, member in enumerate(members):
         worksheet.write_number(i+1, j+1, int(role.id in member.roles), text)
 
 worksheet.autofit()
+
+worksheet = workbook.add_worksheet("Metadata")
+
+worksheet.write_string(0, 0, datetime.now().isoformat())
+for i, role in enumerate(roles):
+    worksheet.write_string(0, i+1, role.id)
 
 workbook.close()
