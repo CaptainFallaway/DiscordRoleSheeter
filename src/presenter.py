@@ -69,7 +69,7 @@ class Presenter:
         else:
             approx_time += 10
 
-        await self.view.show_popup("Status", f"Applying changes... (Approx ~{approx_time} seconds)", "yellow")
+        status_popup = await self.view.show_popup("Status", f"Applying changes... (Approx ~{approx_time} seconds)", "yellow")
 
         discord_resp = await self.drm.apply_changes(resp.changes)
 
@@ -77,6 +77,7 @@ class Presenter:
             await self.view.show_popup("Discord Error", discord_resp.message, "red")
             return
 
+        status_popup.dismiss()
         await self.view.show_popup("Success", "Changes have been applied! See discord or pull again.", "green")
 
     async def refresh(self) -> None:
