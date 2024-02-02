@@ -3,7 +3,7 @@
 
 WINDOW_SIZE = (700, 250)
 ICON_PATH = "src/assets/icon.ico"
-WINDOW_TITLE = "Discord Role Manager"
+WINDOW_TITLE = "Discord Role Manager - By captainfallaway"
 
 
 # Discord API Constants
