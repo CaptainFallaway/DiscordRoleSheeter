@@ -25,7 +25,6 @@ class Presenter:
 
     async def pull(self) -> None:
         date = datetime.now()
-        await self.view.update_timestamp(date.strftime(TIME_FORMAT))
 
         roles = await self.drm.get_roles()
         members = await self.drm.get_members()
@@ -44,8 +43,9 @@ class Presenter:
             await self.view.show_popup("Excel Error", "Please close excel file and try again.", "red")
             return
 
-        await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!", "green")
         await self.view.update_changes("No changes")
+        await self.view.update_timestamp(date.strftime(TIME_FORMAT))
+        await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!", "green")
 
     async def push(self) -> None:
         resp = await self.excelmanager.read()
@@ -56,12 +56,20 @@ class Presenter:
             await self.view.show_popup("Excel Error", resp.message, False)
             return
 
+        if not resp.changes:
+            await self.view.show_popup("No changes", "No changes to apply.", "yellow")
+            return
+
         approx_time = 0
         for change in resp.changes:
             approx_time += len(change.added_roles) + len(change.removed_roles)
-        approx_time += 10
 
-        await self.view.show_popup("Status", f"Applying changes... ~{approx_time} seconds)", "yellow")
+        if approx_time < 10:
+            approx_time = 3
+        else:
+            approx_time += 10
+
+        await self.view.show_popup("Status", f"Applying changes... (Approx ~{approx_time} seconds)", "yellow")
 
         discord_resp = await self.drm.apply_changes(resp.changes)
 
