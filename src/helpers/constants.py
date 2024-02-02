@@ -12,7 +12,6 @@ TOKEN = "MTE5NzY0NjYwOTA0ODE1ODMzMA.GZVCNG.ps32lXOUnU0WdcEsfzh8ARYfGjvWEeShFwj0k
 GUILD = "341280708377051137"
 
 API_URI = "https://discord.com/api/v10"
-GATEWAY_URI = "wss://gateway.discord.gg/?v=10&encoding=json"
 HEADERS = {
         'authorization': f"Bot {TOKEN}",
         'Content-Type': 'application/json'
