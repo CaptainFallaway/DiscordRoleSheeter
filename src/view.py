@@ -49,10 +49,9 @@ class View(Widget):
     async def update_timestamp(self, text: str) -> None:
         self.ids.status_panel.ids.lbl_timestamp.text = text
 
-    async def update_status(self, text: str) -> None:
-        self.ids.status_panel.ids.scrollable_text_container.ids.lbl_status.text = text
+    async def update_changes(self, text: str) -> None:
+        self.ids.status_panel.ids.scrollable_text_container.ids.lbl_changes.text = text
 
-    async def show_warning_popup(self, title: str, text: str) -> None:
+    async def show_popup(self, title: str, text: str) -> None:
         popup = WarningPopup(title, text)
-
         popup.open()

@@ -26,3 +26,8 @@ POPUP_PATH = "src/kv/popup.kv"
 # Excel
 
 EXCEL_FILENAME = "roles.xlsx"
+
+
+# Standard time format
+
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import TypeAliasType
 from pydantic import BaseModel, model_validator, Field
 
@@ -111,6 +112,20 @@ class MemberChanges(BaseModel):
         removed_roles: list[SnowFlake] = []
     """
 
+    username: str
     user_id: SnowFlake
     added_roles: list[SnowFlake] = []
     removed_roles: list[SnowFlake] = []
+
+
+class ExcelReadResponse(BaseModel):
+    """
+    ExcelReadResponse object
+
+    properties:
+        date: datetime
+        changes: list[MemberChanges]
+    """
+
+    date: datetime
+    changes: list[MemberChanges]

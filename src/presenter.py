@@ -2,6 +2,7 @@ from view import View
 from models.excelmanager import ExcelManager
 from models.discordrolemanager import DiscordRoleManager
 from helpers.dataclasses import ErrorInfo
+from helpers.constants import TIME_FORMAT
 
 from datetime import datetime
 
@@ -17,25 +18,57 @@ class Presenter:
         self.drm = DiscordRoleManager()
         self.excelmanager = ExcelManager()
 
-        self.latest_pull_date = None
-
     async def pull(self) -> None:
-        self.latest_pull_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        await self.view.update_timestamp(self.latest_pull_date)
+        date = datetime.now()
+        await self.view.update_timestamp(date.strftime(TIME_FORMAT))
 
         roles = await self.drm.get_roles()
         members = await self.drm.get_members()
 
         if isinstance(roles, ErrorInfo):
-            await self.view.show_warning_popup("Discord Error", roles.message)
+            await self.view.show_popup("Discord Error", roles.message)
+            return
 
         if isinstance(members, ErrorInfo):
-            await self.view.show_warning_popup("Discord Error", members.message)
+            await self.view.show_popup("Discord Error", members.message)
+            return
 
-        print(roles, members)
+        resp = await self.excelmanager.write(date, members, roles)
+
+        if resp is False:
+            await self.view.show_popup("Excel Error", "Please close excel file and try again.")
+
+        await self.view.update_changes("No changes")
 
     async def push(self) -> None:
-        print("push")
+        resp = await self.excelmanager.read()
+
+        if isinstance(resp, ErrorInfo):
+            self.view.update_timestamp("N/A")
+            self.view.update_changes("N/A")
+            await self.view.show_popup("Excel Error", resp.message)
+            return
+
+        # TODO: push to discord
 
     async def refresh(self) -> None:
-        print("refresh")
+        resp = await self.excelmanager.read()
+
+        if isinstance(resp, ErrorInfo):
+            await self.view.update_timestamp("N/A")
+            await self.view.update_changes("N/A")
+            await self.view.show_popup("Excel Error", resp.message)
+            return
+
+        _str = ""
+        for change in resp.changes:
+            username = change.username
+            added_ammount = len(change.added_roles)
+            removed_ammount = len(change.removed_roles)
+
+            crosses = f"[color=00ff00]{added_ammount * '+'}[/color]"
+            minuses = f"[color=ff0000]{removed_ammount * '—'}[/color]"
+            _str += f"[b]{username}[/b] -> {crosses}{minuses}\n"
+
+        await self.view.update_timestamp(resp.date.strftime(TIME_FORMAT))
+        await self.view.update_changes(_str if _str else "No changes")
