@@ -26,7 +26,20 @@ class DiscordRoleManager:
         resp = await self._dc_req("GET", f"/guilds/{GUILD}/members?limit=1000")
 
         if resp.ok:
-            return [Member(**member) for member in resp.json_data]
+            arr = [Member(**member) for member in resp.json_data]
+
+            # Filter out the bots
+            arr = list(
+                filter(
+                    lambda member: not member.user.bot,
+                    arr
+                )
+            )
+
+            # Sort the members by the ammount of roles they have
+            arr = sorted(arr, key=lambda member: len(member.roles))[::-1]
+
+            return arr
         else:
             return ErrorInfo(message=dumps(resp.json_data, indent=4))
 
