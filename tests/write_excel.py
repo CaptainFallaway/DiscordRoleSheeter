@@ -6,8 +6,6 @@ from pydantic import BaseModel, model_validator, Field
 
 SnowFlake = TypeAliasType("SnowFlake", str)
 
-# TODO add a new sheet in the workbook for the role id's and a date of the last update.
-
 
 class Role(BaseModel):
     id: SnowFlake
@@ -23,12 +21,11 @@ class Role(BaseModel):
 class User(BaseModel):
     id: SnowFlake
     username: str
-    global_name: str | None
     bot: bool = Field(default=False, alias="bot")
 
 
 class Member(BaseModel):
-    roles: list[str]  # NOTE maybe a list of Role objects?
+    roles: list[SnowFlake]  # NOTE maybe a list of Role objects?
     user: User
 
 
@@ -47,20 +44,7 @@ def get_text_color(hex_color):
         return "#FFFFFF"
 
 
-base_fmt = {
-    'bold': True,
-    'font_size': 11,
-    'align': 'center',
-    'valign': 'center',
-    'bottom': 1,
-    'border_color': "#ABABAB",
-}
-
-
-workbook = xlsxwriter.Workbook('checkbox_example.xlsx')
-worksheet = workbook.add_worksheet("Roles")
-
-with open("./tests/samples/ers.json", "r") as f:
+with open("./tests/samples/roles.json", "r") as f:
     content = json.load(f)
     roles = [Role(**role) for role in content]
     # for _ in range(3):
@@ -76,8 +60,18 @@ with open("./tests/samples/members.json", "r") as f:
         )
     )
     members = sorted(members, key=lambda member: len(member.roles))[::-1]
-    for _ in range(3):
-        members.extend(members)
+
+base_fmt = {
+    'bold': True,
+    'font_size': 11,
+    'align': 'center',
+    'valign': 'center',
+    'bottom': 1,
+    'border_color': "#ABABAB",
+}
+
+workbook = xlsxwriter.Workbook('checkbox_example.xlsx')
+worksheet = workbook.add_worksheet("Roles")
 
 fmt = workbook.add_format({
     **base_fmt,
@@ -120,7 +114,15 @@ worksheet.autofit()
 worksheet = workbook.add_worksheet("Metadata")
 
 worksheet.write_string(0, 0, datetime.now().isoformat())
+
 for i, role in enumerate(roles):
-    worksheet.write_string(0, i+1, role.id)
+    worksheet.write_string(1, i, role.id)
+
+for i, member in enumerate(members):
+    worksheet.write_string(2, i, member.user.id)
+    worksheet.write_string(3, i, member.user.username)
+    worksheet.write_string(4, i, "|".join(member.roles))
+
+worksheet.protect()
 
 workbook.close()
