@@ -1,18 +1,30 @@
 from json import dumps
+from asyncio import sleep
 from aiohttp import ClientSession
 from helpers.constants import API_URI, GUILD, HEADERS
-from helpers.dataclasses import Member, Role, Resp, ErrorInfo
+from helpers.dataclasses import Member, Role, DiscordResp, ErrorInfo, MemberChanges, DiscordRateLimitHeaders
 
 
 class DiscordRoleManager:
     def __init__(self) -> None:
         ...
 
-    async def _dc_req(self, method: str, endpoint: str, json_data: dict | None = None) -> Resp:
+    async def _dc_req(self, method: str, endpoint: str, json_data: dict | None = None) -> DiscordResp:
         async with ClientSession() as session:
-            async with session.get(f"{API_URI}{endpoint}", json=json_data, headers=HEADERS) as resp:
-                json_data = await resp.json()
-                return Resp(ok=resp.ok, status=resp.status, json_data=json_data)
+            while True:
+                async with session.request(method, f"{API_URI}{endpoint}", json=json_data, headers=HEADERS) as resp:
+                    rate_headers = DiscordRateLimitHeaders(**dict(resp.headers))
+
+                    if rate_headers.remaining == 0:
+                        print(f"Rate limit reached, waiting for {rate_headers.reset_after} seconds.")
+                        print(rate_headers)
+                        await sleep(rate_headers.reset_after)
+                        continue
+
+                    if resp.status == 204:
+                        return DiscordResp(ok=True, status=204, json_data={})
+
+                    return DiscordResp(ok=resp.ok, status=resp.status, json_data=await resp.json())
 
     async def get_roles(self) -> list[Role] | ErrorInfo:
         resp = await self._dc_req("GET", f"/guilds/{GUILD}/roles")
@@ -43,7 +55,14 @@ class DiscordRoleManager:
         else:
             return ErrorInfo(message=dumps(resp.json_data, indent=4))
 
-    # TODO add more methods for setting the roles to the members of the guild.
-    # Lower the ammount of requests to discord api by only changing those who need to be changed.
-    # Aka the ones who changed when the last request was made.
-    # Either you save the previous response or you fetch again.
+    async def apply_changes(self, changes: list[MemberChanges]) -> None | ErrorInfo:
+        for change in changes:
+            for role in change.added_roles:
+                resp = await self._dc_req("PUT", f"/guilds/{GUILD}/members/{change.user_id}/roles/{role}")
+                if not resp.ok:
+                    return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\n{resp.status}")
+
+            for role in change.removed_roles:
+                resp = await self._dc_req("DELETE", f"/guilds/{GUILD}/members/{change.user_id}/roles/{role}")
+                if not resp.ok:
+                    return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\n{resp.status}")
