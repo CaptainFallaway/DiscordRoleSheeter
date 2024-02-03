@@ -37,7 +37,7 @@ class ExcelReader:
             excel_member = metadata_members.get(row[0].value)  # get the model from the username
 
             if excel_member is None:
-                return ErrorInfo(message=f"Accidental name change at row number {indx+2} !")
+                return ErrorInfo(message=f"Accidental name change at row number '{indx+2}' !")
 
             member_changes = MemberChanges(username=row[0].value, user_id=excel_member.user_id)
 
