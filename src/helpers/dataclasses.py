@@ -5,9 +5,9 @@ from pydantic import BaseModel, model_validator, Field
 SnowFlake = TypeAliasType("SnowFlake", str)
 
 
-class Role(BaseModel):
+class DiscordRole(BaseModel):
     """
-    Role object
+    Describes a DiscordRole object
 
     properties:
         id: SnowFlake (snowflake is a literal string)
@@ -25,9 +25,9 @@ class Role(BaseModel):
         return values
 
 
-class User(BaseModel):
+class DiscordUser(BaseModel):
     """
-    User object
+    Describes a DiscordUser object
 
     properties:
         id: SnowFlake (snowflake is a literal string)
@@ -41,9 +41,9 @@ class User(BaseModel):
     bot: bool = Field(default=False, alias="bot")
 
 
-class Member(BaseModel):
+class DiscordMember(BaseModel):
     """
-    Member object
+    Describes a DiscordMember object
 
     properties:
         roles: list[SnowFlake] (list of strings)
@@ -51,7 +51,7 @@ class Member(BaseModel):
     """
 
     roles: list[SnowFlake]
-    user: User
+    user: DiscordUser
 
 
 class DiscordResp(BaseModel):

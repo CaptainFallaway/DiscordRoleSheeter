@@ -2,7 +2,7 @@ from datetime import datetime
 
 from ._excel_writer import ExcelWriter
 from ._excel_reader import ExcelReader
-from helpers.dataclasses import Member, Role, ExcelReadResponse, ErrorInfo
+from helpers.dataclasses import DiscordMember, DiscordRole, ExcelReadResponse, ErrorInfo
 
 
 class ExcelManager:
@@ -16,7 +16,7 @@ class ExcelManager:
         self.writer = ExcelWriter()
         self.reader = ExcelReader()
 
-    async def write(self, datetime: datetime, members: list[Member], roles: list[Role]) -> bool:
+    async def write(self, datetime: datetime, members: list[DiscordMember], roles: list[DiscordRole]) -> bool:
         return self.writer.write(datetime, members, roles)
 
     async def read(self) -> ExcelReadResponse | ErrorInfo:

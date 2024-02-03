@@ -1,6 +1,6 @@
 import xlsxwriter
 from datetime import datetime
-from helpers.dataclasses import Member, Role
+from helpers.dataclasses import DiscordMember, DiscordRole
 from helpers.constants import EXCEL_FILENAME, EXCEL_PASSWORD
 
 
@@ -17,7 +17,7 @@ class ExcelWriter:
 
         self.workbook = None
 
-    def write(self, date: datetime, members: list[Member], roles: list[Role]) -> bool:
+    def write(self, date: datetime, members: list[DiscordMember], roles: list[DiscordRole]) -> bool:
         self.workbook = xlsxwriter.Workbook(EXCEL_FILENAME)
 
         self._add_roles(members, roles)
@@ -68,7 +68,7 @@ class ExcelWriter:
 
         return text
 
-    def _add_roles(self, members: list[Member], roles: list[Role]) -> None:
+    def _add_roles(self, members: list[DiscordMember], roles: list[DiscordRole]) -> None:
         worksheet = self.workbook.add_worksheet("Roles")
 
         fmt = self.workbook.add_format({
@@ -98,7 +98,7 @@ class ExcelWriter:
 
         worksheet.autofit()
 
-    def _add_metadata(self, date: datetime, members: list[Member], roles: list[Role]) -> None:
+    def _add_metadata(self, date: datetime, members: list[DiscordMember], roles: list[DiscordRole]) -> None:
         worksheet = self.workbook.add_worksheet("Metadata")
 
         worksheet.write_string(0, 0, date.isoformat())

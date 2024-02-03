@@ -2,7 +2,15 @@ from json import dumps
 from asyncio import sleep
 from aiohttp import ClientSession
 from helpers.constants import API_URI, GUILD, HEADERS
-from helpers.dataclasses import Member, Role, DiscordResp, ErrorInfo, MemberChanges, DiscordRateLimitHeaders
+
+from helpers.dataclasses import (
+    ErrorInfo,
+    DiscordRole,
+    DiscordResp,
+    DiscordMember,
+    MemberChanges,
+    DiscordRateLimitHeaders
+)
 
 
 class DiscordManager:
@@ -21,19 +29,21 @@ class DiscordManager:
 
                     return DiscordResp(ok=resp.ok, status=resp.status, json_data=await resp.json())
 
-    async def get_roles(self) -> list[Role] | ErrorInfo:
+    async def get_roles(self) -> list[DiscordRole] | ErrorInfo:
         resp = await self._dc_req("GET", f"/guilds/{GUILD}/roles")
 
         if resp.ok:
-            return [Role(**role) for role in resp.json_data if not role["managed"] and role['name'] != "@everyone"]
+            return [
+                DiscordRole(**role) for role in resp.json_data if not role["managed"] and role['name'] != "@everyone"
+            ]
         else:
             return ErrorInfo(message=dumps(resp.json_data, indent=4))
 
-    async def get_members(self) -> list[Member] | ErrorInfo:
+    async def get_members(self) -> list[DiscordMember] | ErrorInfo:
         resp = await self._dc_req("GET", f"/guilds/{GUILD}/members?limit=1000")
 
         if resp.ok:
-            arr = [Member(**member) for member in resp.json_data]
+            arr = [DiscordMember(**member) for member in resp.json_data]
 
             # Filter out the bots
             arr = list(
