@@ -13,9 +13,9 @@ GUILD = "341280708377051137"
 
 API_URI = "https://discord.com/api/v10"
 HEADERS = {
-        'authorization': f"Bot {TOKEN}",
-        'Content-Type': 'application/json'
-    }
+    'authorization': f"Bot {TOKEN}",
+    'Content-Type': 'application/json'
+}
 
 
 # Kivy Lang Path Constants
@@ -27,6 +27,7 @@ POPUP_PATH = "src/kv/popup.kv"
 # Excel
 
 EXCEL_FILENAME = "roles.xlsx"
+EXCEL_PASSWORD = "DONOTTOUCHTHISDATA"
 
 
 # Standard time format

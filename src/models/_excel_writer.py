@@ -1,7 +1,7 @@
 import xlsxwriter
 from datetime import datetime
 from helpers.dataclasses import Member, Role
-from helpers.constants import EXCEL_FILENAME
+from helpers.constants import EXCEL_FILENAME, EXCEL_PASSWORD
 
 
 class ExcelWriter:
@@ -111,4 +111,4 @@ class ExcelWriter:
             worksheet.write_string(3, i, member.user.username)
             worksheet.write_string(4, i, "|".join(member.roles))
 
-        worksheet.protect()
+        worksheet.protect(EXCEL_PASSWORD)
