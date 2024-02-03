@@ -26,23 +26,29 @@ class Presenter:
     async def pull(self) -> None:
         date = datetime.now()
 
+        status_popup = await self.view.show_popup("Status", "Pulling members and roles from discord...", "yellow")
+
         roles = await self.drm.get_roles()
         members = await self.drm.get_members()
 
         if isinstance(roles, ErrorInfo):
+            status_popup.dismiss()
             await self.view.show_popup("Discord Error", roles.message, "red")
             return
 
         if isinstance(members, ErrorInfo):
+            status_popup.dismiss()
             await self.view.show_popup("Discord Error", members.message, "red")
             return
 
         resp = await self.excelmanager.write(date, members, roles)
 
         if resp is False:
+            status_popup.dismiss()
             await self.view.show_popup("Excel Error", "Please close excel file and try again.", "red")
             return
 
+        status_popup.dismiss()
         await self.view.update_changes("No changes")
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
         await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!", "green")
