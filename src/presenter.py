@@ -8,7 +8,6 @@ from models.discordrolemanager import DiscordRoleManager
 from helpers.constants import TIME_FORMAT, EXCEL_FILENAME
 
 
-
 class Presenter:
     """Presenter for the app
 
@@ -60,7 +59,7 @@ class Presenter:
         if isinstance(resp, ErrorInfo):
             self.view.update_timestamp("N/A")
             self.view.update_changes("N/A")
-            await self.view.show_popup("Excel Error", resp.message, False)
+            await self.view.show_popup("Excel Error", resp.message, "red")
             return
 
         if not resp.changes:
