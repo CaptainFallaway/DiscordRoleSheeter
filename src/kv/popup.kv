@@ -3,7 +3,7 @@
 #:include src/kv/roundedbutton.kv
 
 
-<WarningPopupContent@BoxLayout>:
+<NotificationPopupContent@BoxLayout>:
     orientation: "vertical"
     spacing: 8
 
@@ -21,7 +21,7 @@
         on_release: root.parent.parent.parent.dismiss()
 
 
-<WarningPopup>:
+<NotificationPopup>:
     seperator_height: 5
     background_color: 0, 0, 0, 0.1
     auto_dismiss: False
@@ -30,5 +30,5 @@
     title_align: "center"
     title_size: 20
 
-    WarningPopupContent:
+    NotificationPopupContent:
         id: warning_content

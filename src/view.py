@@ -7,7 +7,7 @@ from kivy.uix.widget import Widget
 from kivy.lang.builder import Builder
 
 
-class WarningPopup(Popup):
+class NotificationPopup(Popup):
     def __init__(self, title: str, text: str, **kwargs):
         super().__init__(**kwargs)
         self.title = title
@@ -57,8 +57,8 @@ class View(Widget):
             title: str,
             text: str,
             color: Literal["red"] | Literal["green"] | Literal["yellow"]
-            ) -> WarningPopup:
-        popup = WarningPopup(title, text)
+            ) -> NotificationPopup:
+        popup = NotificationPopup(title, text)
 
         match color:
             case "red":
