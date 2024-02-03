@@ -41,7 +41,7 @@ class ExcelReader:
             excel_member = metadata_members.get(row[0].value)  # get the model from the username
 
             if excel_member is None:
-                return ErrorInfo(message=f"Accidental name change at row number '{indx+2}' !")
+                return ErrorInfo(message=f"Accidental name change in cell '[b]A{indx+2}[/b]' !")
 
             member_changes = MemberChanges(username=row[0].value, user_id=excel_member.user_id)
 
@@ -50,7 +50,7 @@ class ExcelReader:
                 val = cell.value
 
                 if val is None or not isinstance(val, int):
-                    return ErrorInfo(message=f"Invalid value at cell '{cell.column_letter}{cell.row}' !")
+                    return ErrorInfo(message=f"Invalid cell value at '[b]{cell.column_letter}{cell.row}[/b]' !")
 
                 if val and role_id not in excel_member.roles:
                     member_changes.added_roles.append(role_id)

@@ -44,12 +44,12 @@
     RoundedButton:
         id: btn_pull
         text: 'Pull To Excel'
-        on_press: root.parent.parent.pull()
+        on_release: root.parent.parent.pull()
 
     RoundedButton:
         id: btn_push
         text: 'Push To Discord'
-        on_press: root.parent.parent.push()
+        on_release: root.parent.parent.push()
 
 
 <StatusPanel@BoxLayout>:
@@ -60,7 +60,7 @@
     spacing: 15
 
     Label:
-        text: 'Local Excel Changes:'
+        text: 'Local Excel Changes Since Pull:'
         size_hint: (1, 0.1)
         color: 0.65, 0.65, 0.65, 1
         bold: True
@@ -84,7 +84,7 @@
     RoundedButton:
         text: "Refresh"
         size_hint: (1, 0.25)
-        on_press: root.parent.parent.refresh()
+        on_release: root.parent.parent.refresh()
 
 
 <View>:

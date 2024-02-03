@@ -23,6 +23,9 @@ class Presenter:
         self.drm = DiscordManager()
         self.excelmanager = ExcelManager()
 
+        # A flag the check if the data has been reviewed before pushing
+        self.refreshed = False
+
         # Auto refresh on startup
         loop = asyncio.get_event_loop()
         loop.create_task(self.refresh(ignore_error=True))
@@ -49,25 +52,32 @@ class Presenter:
 
         if resp is False:
             status_popup.dismiss()
-            await self.view.show_popup("Excel Error", "Please close excel file and try again.", "red")
+            await self.view.show_popup("Excel Error", "Please [b]close excel[/b] file and try again.", "red")
             return
 
         status_popup.dismiss()
+        self.refreshed = False
         await self.view.update_changes("No changes")
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
-        await self.view.show_popup("Success", f"Changes have been pulled and put in to '{EXCEL_FILENAME}' !", "green")
+        await self.view.show_popup(
+            "Success", f"Changes have been pulled and put in to '[b]{EXCEL_FILENAME}[/b]' !", "green"
+            )
 
     async def push(self) -> None:
         resp = await self.excelmanager.read()
 
         if isinstance(resp, ErrorInfo):
-            self.view.update_timestamp("N/A")
-            self.view.update_changes("N/A")
+            await self.view.update_timestamp("N/A")
+            await self.view.update_changes("N/A")
             await self.view.show_popup("Excel Error", resp.message, "red")
             return
 
         if not resp.changes:
             await self.view.show_popup("No changes", "No changes to apply.", "yellow")
+            return
+
+        if not self.refreshed:
+            await self.view.show_popup("Warning", "Please [b]refresh[/b] to review changes first.", "yellow")
             return
 
         approx_time = 0
@@ -99,6 +109,9 @@ class Presenter:
             await self.view.update_changes("N/A")
             await self.view.show_popup("Excel Error", resp.message, "red") if not ignore_error else None
             return
+
+        if resp.changes:
+            self.refreshed = True
 
         _str = ""
         for change in resp.changes:
