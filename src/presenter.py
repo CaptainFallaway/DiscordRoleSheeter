@@ -74,6 +74,7 @@ class Presenter:
         discord_resp = await self.drm.apply_changes(resp.changes)
 
         if isinstance(discord_resp, ErrorInfo):
+            status_popup.dismiss()
             await self.view.show_popup("Discord Error", discord_resp.message, "red")
             return
 
