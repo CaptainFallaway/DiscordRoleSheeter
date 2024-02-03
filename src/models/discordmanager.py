@@ -65,9 +65,9 @@ class DiscordManager:
             for role in change.added_roles:
                 resp = await self._dc_req("PUT", f"/guilds/{GUILD}/members/{change.user_id}/roles/{role}")
                 if not resp.ok:
-                    return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\n{resp.status}")
+                    return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
 
             for role in change.removed_roles:
                 resp = await self._dc_req("DELETE", f"/guilds/{GUILD}/members/{change.user_id}/roles/{role}")
                 if not resp.ok:
-                    return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\n{resp.status}")
+                    return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
