@@ -19,7 +19,7 @@ class MainApp(App):
         super().__init__(**kwargs)
 
         Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
-        Config.set('graphics', 'transparent_color', (0, 0, 0, 0))
+        Config.set('kivy', 'exit_on_escape', '0')
 
         Window.size = WINDOW_SIZE
         Window.bind(on_resize=lambda *_: Window._set_size(WINDOW_SIZE))  # Static window size
