@@ -23,8 +23,8 @@ class Presenter:
         self.drm = DiscordManager()
         self.excelmanager = ExcelManager()
 
-        # A flag the check if the data has been reviewed before pushing
-        self.refreshed = False
+        # A flag to see what changes have been refreshed and put in to the view
+        self.refreshed_changes = []
 
         # Auto refresh on startup
         loop = asyncio.get_event_loop()
@@ -56,7 +56,7 @@ class Presenter:
             return
 
         status_popup.dismiss()
-        self.refreshed = False
+        self.refreshed_changes = []  # Reset the changes since we have a new excel file
         await self.view.update_changes("No changes")
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
         await self.view.show_popup(
@@ -76,7 +76,7 @@ class Presenter:
             await self.view.show_popup("No changes", "No changes to apply.", "yellow")
             return
 
-        if not self.refreshed:
+        if self.refreshed_changes != resp.changes:
             await self.view.show_popup("Warning", "Please [b]refresh[/b] to review changes first.", "yellow")
             return
 
@@ -111,7 +111,7 @@ class Presenter:
             return
 
         if resp.changes:
-            self.refreshed = True
+            self.refreshed_changes = resp.changes
 
         _str = ""
         for change in resp.changes:
