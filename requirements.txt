@@ -3,4 +3,4 @@ openpyxl~=3.1.2
 kivy[base]~=2.3.0
 pydantic~=2.5.3
 aiohttp[speedups]~=3.9.3
-auto-py-to-exe~=2.42.0
+pyinstaller~=6.3.0
