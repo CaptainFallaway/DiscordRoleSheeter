@@ -21,7 +21,7 @@ class Presenter:
 
         # Auto refresh on startup
         loop = asyncio.get_event_loop()
-        loop.create_task(self.refresh())
+        loop.create_task(self.refresh(ignore_error=True))
 
     async def pull(self) -> None:
         date = datetime.now()
@@ -80,13 +80,13 @@ class Presenter:
         status_popup.dismiss()
         await self.view.show_popup("Success", "Changes have been applied! See discord or pull again.", "green")
 
-    async def refresh(self) -> None:
+    async def refresh(self, ignore_error: bool = False) -> None:
         resp = await self.excelmanager.read()
 
         if isinstance(resp, ErrorInfo):
             await self.view.update_timestamp("N/A")
             await self.view.update_changes("N/A")
-            await self.view.show_popup("Excel Error", resp.message, "red")
+            await self.view.show_popup("Excel Error", resp.message, "red") if not ignore_error else None
             return
 
         _str = ""
