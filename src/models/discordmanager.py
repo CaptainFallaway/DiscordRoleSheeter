@@ -40,6 +40,7 @@ class DiscordManager:
             return ErrorInfo(message=dumps(resp.json_data, indent=4))
 
     async def get_members(self) -> list[DiscordMember] | ErrorInfo:
+        # NOTE the limit is 1000, if the server has more than 1000 members, we need to implement pagination
         resp = await self._dc_req("GET", f"/guilds/{GUILD}/members?limit=1000")
 
         if resp.ok:
