@@ -1,4 +1,7 @@
+import os
+import sys
 import asyncio
+from kivy.resources import resource_add_path
 
 from kivy.app import App
 from kivy.config import Config
@@ -30,6 +33,9 @@ class MainApp(App):
 
 
 if __name__ == '__main__':
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS))
+
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
