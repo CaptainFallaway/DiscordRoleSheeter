@@ -4,19 +4,23 @@ from datetime import datetime
 from view import View
 from helpers.dataclasses import ErrorInfo
 from models.excelmanager import ExcelManager
-from models.discordrolemanager import DiscordRoleManager
+from models.discordmanager import DiscordManager
 from helpers.constants import TIME_FORMAT, EXCEL_FILENAME
 
 
 class Presenter:
-    """Presenter for the app
+    """
+    Presenter for the app
 
-    This is a Presenter in the MVP pattern.
+    This is the Presenter in the MVP pattern.
     """
 
     def __init__(self):
+        # Instentiate the view of the app, main.py will use this to build the app
         self.view = View(self)
-        self.drm = DiscordRoleManager()
+
+        # Instentiate the models
+        self.drm = DiscordManager()
         self.excelmanager = ExcelManager()
 
         # Auto refresh on startup

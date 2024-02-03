@@ -8,13 +8,30 @@ from kivy.lang.builder import Builder
 
 
 class NotificationPopup(Popup):
-    def __init__(self, title: str, text: str, **kwargs):
+    """Custom popup for notifications
+
+    description:
+        This is a popup the populates the whole screen with information.
+        The seperator color is supposed to invoke what type of information is displayed.
+    """
+
+    def __init__(self, title: str, text: str, color: Literal["red"] | Literal["green"] | Literal["yellow"], **kwargs):
         super().__init__(**kwargs)
         self.title = title
         self.ids.warning_content.ids.lbl_text.text = text
 
+        match color:
+            case "red":
+                self.separator_color = (1, 0, 0, 1)
+            case "green":
+                self.separator_color = (0, 1, 0, 1)
+            case "yellow":
+                self.separator_color = (1, 1, 0, 1)
+
 
 class Presenter(Protocol):
+    """Protocol for the presenter class"""
+
     async def pull(self) -> None:
         ...
 
@@ -58,16 +75,7 @@ class View(Widget):
             text: str,
             color: Literal["red"] | Literal["green"] | Literal["yellow"]
             ) -> NotificationPopup:
-        popup = NotificationPopup(title, text)
-
-        match color:
-            case "red":
-                popup.separator_color = (1, 0, 0, 1)
-            case "green":
-                popup.separator_color = (0, 1, 0, 1)
-            case "yellow":
-                popup.separator_color = (1, 1, 0, 1)
-
+        popup = NotificationPopup(title, text, color)
         popup.open()
 
         return popup

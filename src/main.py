@@ -33,6 +33,7 @@ class MainApp(App):
 
 
 if __name__ == '__main__':
+    # Add the resource path for the kivy app
     if hasattr(sys, '_MEIPASS'):
         resource_add_path(os.path.join(sys._MEIPASS))
 

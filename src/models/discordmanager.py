@@ -5,10 +5,7 @@ from helpers.constants import API_URI, GUILD, HEADERS
 from helpers.dataclasses import Member, Role, DiscordResp, ErrorInfo, MemberChanges, DiscordRateLimitHeaders
 
 
-class DiscordRoleManager:
-    def __init__(self) -> None:
-        ...
-
+class DiscordManager:
     async def _dc_req(self, method: str, endpoint: str, json_data: dict | None = None) -> DiscordResp:
         async with ClientSession() as session:
             while True:

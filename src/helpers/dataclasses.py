@@ -17,7 +17,7 @@ class Role(BaseModel):
 
     id: SnowFlake
     name: str
-    color:  str
+    color: str
 
     @model_validator(mode="before")
     def int_to_hex(cls, values) -> dict:
@@ -34,9 +34,6 @@ class User(BaseModel):
         username: str
         global_name: str | None
         bot: bool
-
-    description:
-        global_name -> "the user's display name, if it is set. For bots, this is the application name" -Discord API Docs
     """
 
     id: SnowFlake
@@ -53,7 +50,7 @@ class Member(BaseModel):
         user: User
     """
 
-    roles: list[SnowFlake]  # NOTE maybe a list of Role objects?
+    roles: list[SnowFlake]
     user: User
 
 
@@ -70,7 +67,6 @@ class DiscordResp(BaseModel):
         ok -> True if status is 200, else False
         status -> HTTP status code
         json -> json response from Discord API. in our case a dict means no no happend.
-
     """
 
     ok: bool
@@ -84,6 +80,9 @@ class ErrorInfo(BaseModel):
 
     properties:
         message: str
+
+    description:
+        Some functions may return this to indicate an error.
     """
 
     message: str

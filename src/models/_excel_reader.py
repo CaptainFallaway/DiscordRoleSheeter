@@ -15,6 +15,8 @@ class ExcelReader:
         except FileNotFoundError:
             return ErrorInfo(message="The excel file does not exist or is not readable.")
 
+        # Get the metadata sheet data
+
         metadata_sheet = workbook["Metadata"]
 
         metadata_date = datetime.fromisoformat(metadata_sheet["A1"].value)
@@ -28,6 +30,8 @@ class ExcelReader:
             roles = column[4].value.split("|")
 
             metadata_members[username] = ExcelMember(user_id=user_id, roles=roles)
+
+        # Get the roles sheet data and compare it with the metadata
 
         roles_sheet = workbook["Roles"]
 

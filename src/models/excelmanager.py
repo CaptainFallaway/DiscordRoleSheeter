@@ -6,6 +6,12 @@ from helpers.dataclasses import Member, Role, ExcelReadResponse, ErrorInfo
 
 
 class ExcelManager:
+    """
+    Manager for the excel file
+
+    This class is a facade for the excel writer and reader.
+    """
+
     def __init__(self) -> None:
         self.writer = ExcelWriter()
         self.reader = ExcelReader()
