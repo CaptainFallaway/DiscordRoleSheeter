@@ -1,11 +1,12 @@
 import asyncio
+from datetime import datetime
+
 from view import View
+from helpers.dataclasses import ErrorInfo
 from models.excelmanager import ExcelManager
 from models.discordrolemanager import DiscordRoleManager
-from helpers.dataclasses import ErrorInfo
-from helpers.constants import TIME_FORMAT
+from helpers.constants import TIME_FORMAT, EXCEL_FILENAME
 
-from datetime import datetime
 
 
 class Presenter:
@@ -51,7 +52,7 @@ class Presenter:
         status_popup.dismiss()
         await self.view.update_changes("No changes")
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
-        await self.view.show_popup("Success", "Changes have been pulled and put in the excel file!", "green")
+        await self.view.show_popup("Success", f"Changes have been pulled and put in to '{EXCEL_FILENAME}' !", "green")
 
     async def push(self) -> None:
         resp = await self.excelmanager.read()
