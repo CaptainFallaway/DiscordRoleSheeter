@@ -1,3 +1,4 @@
+from time import time
 from json import dumps
 from asyncio import sleep
 from aiohttp import ClientSession
@@ -14,20 +15,24 @@ from helpers.dataclasses import (
 
 
 class DiscordManager:
+    def __init__(self) -> None:
+        self.sleep_release_timestamp = 0.0
+
     async def _dc_req(self, method: str, endpoint: str, json_data: dict | None = None) -> DiscordResp:
         async with ClientSession() as session:
-            while True:
-                async with session.request(method, f"{API_URI}{endpoint}", json=json_data, headers=HEADERS) as resp:
-                    rate_headers = DiscordRateLimitHeaders(**dict(resp.headers))
+            if self.sleep_release_timestamp > time():
+                await sleep(self.sleep_release_timestamp - time() + 0.5)
 
-                    if rate_headers.remaining == 0:
-                        await sleep(rate_headers.reset_after)
-                        continue
+            async with session.request(method, f"{API_URI}{endpoint}", json=json_data, headers=HEADERS) as resp:
+                rate_headers = DiscordRateLimitHeaders(**dict(resp.headers))
 
-                    if resp.status == 204:
-                        return DiscordResp(ok=True, status=204, json_data={})
+                if rate_headers.remaining == 0:
+                    self.sleep_release_timestamp = time() + rate_headers.reset_after
 
-                    return DiscordResp(ok=resp.ok, status=resp.status, json_data=await resp.json())
+                if resp.status == 204:  # Since 204 has no content, we return an empty dict
+                    return DiscordResp(ok=True, status=204, json_data={})
+
+                return DiscordResp(ok=resp.ok, status=resp.status, json_data=await resp.json())
 
     async def get_roles(self) -> list[DiscordRole] | ErrorInfo:
         resp = await self._dc_req("GET", f"/guilds/{GUILD}/roles")

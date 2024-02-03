@@ -135,9 +135,16 @@ class DiscordRateLimitHeaders(BaseModel):
     DiscordRateLimitHeaders object
 
     properties:
-        "x-ratelimit-limit": int
-        "x-ratelimit-remaining": int
-        "x-ratelimit-reset-after": float
+        limit: int
+        remaining: int
+        reset-after: float
+
+    description:
+        This class is used to parse the headers from the Discord API response.
+
+        limit -> The maximum number of requests that can be made in a given time frame
+        remaining -> The number of requests remaining in the current time frame
+        reset-after -> The number of seconds after which the rate limit resets
     """
 
     limit: int = Field(alias="x-ratelimit-limit")
