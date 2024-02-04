@@ -60,7 +60,7 @@ class Presenter:
         await self.view.update_changes("No changes")
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
         await self.view.show_popup(
-            "Success", f"Changes have been pulled and put in to '[b]{EXCEL_FILENAME}[/b]' !", "green"
+            "Success", f"Changes have been pulled and put in '[b]{EXCEL_FILENAME}[/b]' !", "green"
             )
 
     async def push(self) -> None:
