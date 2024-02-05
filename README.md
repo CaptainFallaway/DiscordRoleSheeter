@@ -1,4 +1,4 @@
-# DiscordRoleSheetAutomation
+# DiscordRoleSheeter
 
 ## Notes
 
