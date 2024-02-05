@@ -2,51 +2,61 @@ from time import time
 from json import dumps
 from asyncio import sleep
 from aiohttp import ClientSession
-from helpers.constants import API_URI, GUILD, HEADERS
+from helpers.constants import API_URI
 
 from helpers.dataclasses import (
+    SnowFlake,
     ErrorInfo,
     DiscordRole,
     DiscordResp,
     DiscordMember,
     MemberChanges,
-    DiscordRateLimitHeaders
+    DiscordRateLimitHeaders,
 )
 
 
 class DiscordManager:
-    def __init__(self) -> None:
+    def __init__(self, token: str, guild_id: SnowFlake) -> None:
         self.sleep_release_timestamp = 0.0
+
+        self.guild_id = guild_id
+        self.headers = {
+            'authorization': f"Bot {token}",
+            'Content-Type': 'application/json'
+        }
 
     async def _dc_req(self, method: str, endpoint: str, json_data: dict | None = None) -> DiscordResp:
         async with ClientSession() as session:
             if self.sleep_release_timestamp > time():
                 await sleep(self.sleep_release_timestamp - time() + 0.5)
 
-            async with session.request(method, f"{API_URI}{endpoint}", json=json_data, headers=HEADERS) as resp:
+            async with session.request(method, f"{API_URI}{endpoint}", json=json_data, headers=self.headers) as resp:
+                if not resp.ok:
+                    return DiscordResp(ok=resp.ok, status=resp.status, json_data=await resp.json())
+
                 rate_headers = DiscordRateLimitHeaders(**dict(resp.headers))
 
                 if rate_headers.remaining == 0:
                     self.sleep_release_timestamp = time() + rate_headers.reset_after
 
                 if resp.status == 204:  # Since 204 has no content, we return an empty dict
-                    return DiscordResp(ok=True, status=204, json_data={})
+                    return DiscordResp(ok=resp.ok, status=resp.status, json_data={})
 
                 return DiscordResp(ok=resp.ok, status=resp.status, json_data=await resp.json())
 
     async def get_roles(self) -> list[DiscordRole] | ErrorInfo:
-        resp = await self._dc_req("GET", f"/guilds/{GUILD}/roles")
+        resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/roles")
 
         if resp.ok:
             return [
                 DiscordRole(**role) for role in resp.json_data if not role["managed"] and role['name'] != "@everyone"
             ]
         else:
-            return ErrorInfo(message=dumps(resp.json_data, indent=4))
+            return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
 
     async def get_members(self) -> list[DiscordMember] | ErrorInfo:
         # NOTE the limit is 1000, if the server has more than 1000 members, we need to implement pagination
-        resp = await self._dc_req("GET", f"/guilds/{GUILD}/members?limit=1000")
+        resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/members?limit=1000")
 
         if resp.ok:
             arr = [DiscordMember(**member) for member in resp.json_data]
@@ -64,16 +74,16 @@ class DiscordManager:
 
             return arr
         else:
-            return ErrorInfo(message=dumps(resp.json_data, indent=4))
+            return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
 
     async def apply_changes(self, changes: list[MemberChanges]) -> None | ErrorInfo:
         for change in changes:
             for role in change.added_roles:
-                resp = await self._dc_req("PUT", f"/guilds/{GUILD}/members/{change.user_id}/roles/{role}")
+                resp = await self._dc_req("PUT", f"/guilds/{self.guild_id}/members/{change.user_id}/roles/{role}")
                 if not resp.ok:
                     return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
 
             for role in change.removed_roles:
-                resp = await self._dc_req("DELETE", f"/guilds/{GUILD}/members/{change.user_id}/roles/{role}")
+                resp = await self._dc_req("DELETE", f"/guilds/{self.guild_id}/members/{change.user_id}/roles/{role}")
                 if not resp.ok:
                     return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
