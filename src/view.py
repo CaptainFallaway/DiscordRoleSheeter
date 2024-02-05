@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import Protocol, Literal
 from helpers.constants import POPUP_PATH
 from helpers.async_wrapper import sync_to_async_wrapper
@@ -15,11 +16,20 @@ class NotificationPopup(Popup):
         The seperator color is supposed to invoke what type of information is displayed.
     """
 
-    def __init__(self, title: str, text: str, color: Literal["red"] | Literal["green"] | Literal["yellow"], **kwargs):
-        super().__init__(**kwargs)
+    def __init__(
+            self,
+            title: str,
+            text: str,
+            color: Literal["red"] | Literal["green"] | Literal["yellow"],
+            btn_callback: None | Callable = None,
+            btn_text: str | None = None
+            ) -> None:
+        super().__init__()
+
         self.title = title
         self.ids.warning_content.ids.lbl_text.text = text
 
+        # Set seperator color
         match color:
             case "red":
                 self.separator_color = (1, 0, 0, 1)
@@ -27,6 +37,10 @@ class NotificationPopup(Popup):
                 self.separator_color = (0, 1, 0, 1)
             case "yellow":
                 self.separator_color = (1, 1, 0, 1)
+
+        # Set the button text and callback
+        self.ids.warning_content.ids.btn_ok.text = btn_text or "OK"
+        self.ids.warning_content.ids.btn_ok.bind(on_release=btn_callback or self.dismiss)
 
 
 class Presenter(Protocol):
@@ -73,9 +87,12 @@ class View(Widget):
             self,
             title: str,
             text: str,
-            color: Literal["red"] | Literal["green"] | Literal["yellow"]
+            color: Literal["red"] | Literal["green"] | Literal["yellow"],
+            *,
+            btn_callback: None | Callable = None,
+            btn_text: str | None = None
             ) -> NotificationPopup:
-        popup = NotificationPopup(title, text, color)
+        popup = NotificationPopup(title, text, color, btn_callback, btn_text)
         popup.open()
 
         return popup

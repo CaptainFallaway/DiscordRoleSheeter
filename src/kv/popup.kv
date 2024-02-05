@@ -17,9 +17,9 @@
             size_hint: (None, None)
             size: (self.texture_size[0] + 20, self.texture_size[1] + 20)
     RoundedButton:
-        text: "OK"
+        id: btn_ok
         size_hint_y: 0.3
-        on_release: root.parent.parent.parent.dismiss()
+        # "on_release" and "text" is declared in the python class in view.py
 
 
 <NotificationPopup>:
