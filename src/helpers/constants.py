@@ -24,7 +24,7 @@ EXCEL_PASSWORD = "DONOTTOUCHTHISDATA"
 
 # Standard time format
 
-TIME_FORMAT = "%Y-%m-%d %H:%M:%S"  # TODO - Make this configurable
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 # TOML config file
