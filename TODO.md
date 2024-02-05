@@ -1,5 +1,5 @@
 # TODO
 
-- [ ] Make a human readable config file when you startup the program and just put empty key that will need to be changed
+- [x] Make a config file for configuring bot token, guild id and excel filename that will be used.
 - [ ] Make this FOSS
-- [ ] Look into changing the discord presence, still being a offline solution
+- [ ] Look into changing the discord presence with websocket connection, still being a offline solution...
