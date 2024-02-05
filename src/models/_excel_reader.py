@@ -1,17 +1,16 @@
 import openpyxl
 from datetime import datetime
 
-from helpers.constants import EXCEL_FILENAME
 from helpers.dataclasses import MemberChanges, ExcelMember, ExcelReadResponse, ErrorInfo
 
 
 class ExcelReader:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, excel_filename: str) -> None:
+        self.excel_filename = excel_filename
 
     def read(self) -> ExcelReadResponse | ErrorInfo:
         try:
-            workbook = openpyxl.load_workbook(EXCEL_FILENAME)
+            workbook = openpyxl.load_workbook(self.excel_filename)
         except FileNotFoundError:
             return ErrorInfo(message="The excel file does not exist or is not readable.")
 

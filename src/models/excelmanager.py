@@ -12,9 +12,9 @@ class ExcelManager:
     This class is a facade for the excel writer and reader.
     """
 
-    def __init__(self) -> None:
-        self.writer = ExcelWriter()
-        self.reader = ExcelReader()
+    def __init__(self, excel_filename: str) -> None:
+        self.writer = ExcelWriter(excel_filename)
+        self.reader = ExcelReader(excel_filename)
 
     async def write(self, datetime: datetime, members: list[DiscordMember], roles: list[DiscordRole]) -> bool:
         return self.writer.write(datetime, members, roles)

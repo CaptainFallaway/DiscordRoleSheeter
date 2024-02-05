@@ -4,10 +4,10 @@ from datetime import datetime
 from kivy.lang import Builder
 
 from view import View
-from helpers.dataclasses import ErrorInfo
 from models.excelmanager import ExcelManager
 from models.discordmanager import DiscordManager
-from helpers.constants import TIME_FORMAT, EXCEL_FILENAME, VIEW_PATH
+from helpers.constants import TIME_FORMAT, VIEW_PATH
+from helpers.dataclasses import ErrorInfo, TomlConfig
 
 
 class Presenter:
@@ -17,14 +17,17 @@ class Presenter:
     This is the Presenter in the MVP pattern.
     """
 
-    def __init__(self):
+    def __init__(self, config: TomlConfig) -> None:
         # Instentiate the view of the app, main.py will use this to build the app
         Builder.load_file(VIEW_PATH)
         self.view = View(self)
 
+        # Part of the class since it's used for a popup
+        self.excel_filename = config.excel.excel_filename
+
         # Instentiate the models
-        self.drm = DiscordManager()
-        self.excelmanager = ExcelManager()
+        self.excelmanager = ExcelManager(self.excel_filename)
+        self.drm = DiscordManager(config.discord.bot_token, config.discord.guild_id)
 
         # A flag to see what changes have been refreshed and put in to the view
         self.refreshed_changes = []
@@ -63,7 +66,7 @@ class Presenter:
         await self.view.update_changes("No changes")
         await self.view.update_timestamp(date.strftime(TIME_FORMAT))
         await self.view.show_popup(
-            "Success", f"Changes have been pulled and put in '[b]{EXCEL_FILENAME}[/b]' !", "green"
+            "Success", f"Changes have been pulled and put in '[b]{self.excel_filename}[/b]' !", "green"
             )
 
     async def push(self) -> None:

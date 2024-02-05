@@ -1,11 +1,13 @@
 import xlsxwriter
 from datetime import datetime
+from helpers.constants import EXCEL_PASSWORD
 from helpers.dataclasses import DiscordMember, DiscordRole
-from helpers.constants import EXCEL_FILENAME, EXCEL_PASSWORD
 
 
 class ExcelWriter:
-    def __init__(self) -> None:
+    def __init__(self, excel_filename: str) -> None:
+        self.excel_filename = excel_filename
+
         self._base_fmt = {
             'bold': True,
             'font_size': 11,
@@ -18,7 +20,7 @@ class ExcelWriter:
         self.workbook = None
 
     def write(self, date: datetime, members: list[DiscordMember], roles: list[DiscordRole]) -> bool:
-        self.workbook = xlsxwriter.Workbook(EXCEL_FILENAME)
+        self.workbook = xlsxwriter.Workbook(self.excel_filename)
 
         self._add_roles(members, roles)
         self._add_metadata(date, members, roles)
