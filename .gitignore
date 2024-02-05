@@ -8,3 +8,6 @@
 # Pyinstaller "compile" files
 dist/
 build/
+
+# The config file
+*.toml
