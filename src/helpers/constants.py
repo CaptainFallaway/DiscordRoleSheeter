@@ -9,7 +9,7 @@ WINDOW_TITLE = "Discord Role Sheeter - By captainfallaway"
 # Discord API Constants
 
 TOKEN = "MTE5NzY0NjYwOTA0ODE1ODMzMA.GZVCNG.ps32lXOUnU0WdcEsfzh8ARYfGjvWEeShFwj0kE"
-GUILD = "341280708377051137"
+GUILD = "988163226451709972"
 
 API_URI = "https://discord.com/api/v10"
 HEADERS = {
