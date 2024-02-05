@@ -1,5 +1,10 @@
+# The excel files
 *.xlsm
 *.xlsx
+
+# Python cache
 *.pyc
+
+# Pyinstaller "compile" files
 dist/
 build/
