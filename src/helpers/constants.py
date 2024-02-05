@@ -29,7 +29,7 @@ TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 # TOML config file
 
-TOML_PATH = "./config.toml"
+TOML_FILE = "config.toml"
 TOML_CONTENT = """
 [Discord]
 
