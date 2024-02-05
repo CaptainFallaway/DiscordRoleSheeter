@@ -33,3 +33,18 @@ EXCEL_PASSWORD = "DONOTTOUCHTHISDATA"
 # Standard time format
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+
+# TOML config file
+
+TOML_PATH = "./config.toml"
+TOML_CONTENT = """
+[Discord]
+
+bot_token = ""
+guild_id = ""
+
+[Excel]
+
+export_filename = "roles.xlsx"
+"""

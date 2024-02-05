@@ -1,11 +1,13 @@
 import asyncio
 from datetime import datetime
 
+from kivy.lang import Builder
+
 from view import View
 from helpers.dataclasses import ErrorInfo
 from models.excelmanager import ExcelManager
 from models.discordmanager import DiscordManager
-from helpers.constants import TIME_FORMAT, EXCEL_FILENAME
+from helpers.constants import TIME_FORMAT, EXCEL_FILENAME, VIEW_PATH
 
 
 class Presenter:
@@ -17,6 +19,7 @@ class Presenter:
 
     def __init__(self):
         # Instentiate the view of the app, main.py will use this to build the app
+        Builder.load_file(VIEW_PATH)
         self.view = View(self)
 
         # Instentiate the models

@@ -150,3 +150,49 @@ class DiscordRateLimitHeaders(BaseModel):
     limit: int = Field(alias="x-ratelimit-limit")
     remaining: int = Field(alias="x-ratelimit-remaining")
     reset_after: float = Field(alias="x-ratelimit-reset-after")
+
+
+class TomlDiscordConfig(BaseModel):
+    """
+    TomlDiscordConfig object
+
+    properties:
+        token: str
+        guild: SnowFlake
+
+    description:
+        This class is used to parse the configuration file.
+    """
+
+    bot_token: str
+    guild_id: SnowFlake
+
+
+class TomlExcelConfig(BaseModel):
+    """
+    TomlExcelConfig object
+
+    properties:
+        export_filename: str
+
+    description:
+        This class is used to parse the configuration file.
+    """
+
+    export_filename: str
+
+
+class TomlConfig(BaseModel):
+    """
+    TomlConfig object
+
+    properties:
+        discord: TomlDiscordConfig
+        excel: TomlExcelConfig
+
+    description:
+        This class is used to parse the configuration file.
+    """
+
+    discord: TomlDiscordConfig = Field(alias="Discord")
+    excel: TomlExcelConfig = Field(alias="Excel")
