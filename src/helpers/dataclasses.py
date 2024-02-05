@@ -3,6 +3,7 @@ from typing import TypeAliasType
 from pydantic import BaseModel, model_validator, Field
 
 SnowFlake = TypeAliasType("SnowFlake", str)
+"""Describes a SnowFlake object, which is a string..."""
 
 
 class DiscordRole(BaseModel):
@@ -173,13 +174,13 @@ class TomlExcelConfig(BaseModel):
     TomlExcelConfig object
 
     properties:
-        export_filename: str
+        excel_filename: str
 
     description:
         This class is used to parse the configuration file.
     """
 
-    export_filename: str
+    excel_filename: str
 
 
 class TomlConfig(BaseModel):
