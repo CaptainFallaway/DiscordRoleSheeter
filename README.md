@@ -40,6 +40,12 @@ Either download from [releases](https://github.com/CaptainFallaway/DiscordRoleSh
 3. Go to the Oatuh2 -> Url Generator and select `Bot` in the gray `SCOPES` panel. After that you select `Manage Roles` in the `BOT PERMISSIONS` panel.
 4. Copy the Discord link at the bottom of the page and it should look something like this `https://discord.com/api/oauth2/authorize?client_id=xxxxxxxxxxxxxxxxxxx&permissions=268435456&scope=bot`
 
+## Todo
+
+- [ ] Make a websocket connection run as a background task to update bot discord presence.
+- [ ] Better errors from discord instead of raw ones from the request.
+- [ ] Implement pagination for fetching guild members (only supports up to 1000 members at the moment...)
+
 ## License
 
 This project is licensed under the `Unlicense` License - see the [LICENSE](LICENSE) file for details.
