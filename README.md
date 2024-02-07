@@ -1,10 +1,12 @@
 # DiscordRoleSheeter
 
-DiscordRoleSheeter is a tool for efficient management of Discord server roles. It fetches roles and members from a Discord guild, allows modifications in an Excel spreadsheet, and pushes changes back to Discord, simplifying the process and reducing errors.
+DiscordRoleSheeter is a tool for efficient management of Discord server roles. It fetches roles and members from a Discord guild via a Discord bot, allows modifications in an Excel spreadsheet, and pushes changes back to Discord, simplifying the process and reducing errors.
 
 ## Motivation
 
 Discord servers, especially larger ones, often have a complex structure of roles and members. Managing these roles manually can be a time-consuming and error-prone task. DiscordRoleSheeter was created to address this issue. It provides a user-friendly graphical interface that simplifies the process of managing roles. By leveraging the power of Excel for data manipulation, it allows administrators to pull role and member data from Discord, make changes in a familiar spreadsheet environment, and then push those changes back to Discord. This not only saves time but also reduces the likelihood of mistakes.
+
+This is made to be a simple application for you to setup your own Discord bot and use this application with so you have full ownership of the managment. It's also supposed to emulate a github workflow by pushing and pulling changes from and to Discord for a more keen user experience.
 
 ## Features
 
