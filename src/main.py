@@ -1,12 +1,13 @@
 import sys
 import asyncio
 from os import path
-from tomllib import load, loads
-from kivy.resources import resource_add_path
+from pydantic import ValidationError
+from tomllib import load, loads, TOMLDecodeError
 
 from kivy.app import App
 from kivy.config import Config
 from kivy.core.window import Window
+from kivy.resources import resource_add_path
 
 from view import View
 from presenter import Presenter
@@ -18,6 +19,7 @@ from helpers.constants import WINDOW_SIZE, ICON_PATH, WINDOW_TITLE, TOML_FILE, T
 class MainApp(App):
     """Main app class"""
 
+    toml_config_error: bool = False
     toml_config: TomlConfig = TomlConfig(**loads(TOML_CONTENT))
     _empty_toml_config: TomlConfig = TomlConfig(**loads(TOML_CONTENT))
 
@@ -26,7 +28,10 @@ class MainApp(App):
 
         if path.exists(TOML_FILE):
             with open(TOML_FILE, "rb") as f:
-                self.toml_config = TomlConfig(**load(f))
+                try:
+                    self.toml_config = TomlConfig(**load(f))
+                except (ValidationError, TOMLDecodeError):
+                    self.toml_config_error = True
         else:
             with open(TOML_FILE, "w") as f:
                 f.write(TOML_CONTENT)
@@ -41,7 +46,16 @@ class MainApp(App):
 
     @sync_to_async_wrapper
     async def on_start(self) -> None:
-        if self.toml_config is None or self.toml_config == self._empty_toml_config:
+        if self.toml_config_error:
+            await self.presenter.view.show_popup(
+                "Config Error",
+                f"Please check [b]'{TOML_FILE}'[/b] for quotation errors, improper values or changed property names."
+                + "\n\n(Or just delete the file and restart the application to generate a new one)",
+                "red",
+                btn_callback=self.stop,
+                btn_text="Exit"
+            )
+        elif self.toml_config is None or self.toml_config == self._empty_toml_config:
             await self.presenter.view.show_popup(
                 "Config Info",
                 f"Please exit the application and edit [b]'{TOML_FILE}'[/b] to enter your bot token and guild id.",
