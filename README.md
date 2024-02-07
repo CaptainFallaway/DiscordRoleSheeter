@@ -20,7 +20,7 @@ This is made to be a simple application for you to setup and run your own Discor
 
 Either download from [releases](https://github.com/CaptainFallaway/DiscordRoleSheeter/releases).
 
-##### Or:
+Or:
 
 1. Clone the repository: `git clone https://github.com/yourusername/DiscordRoleSheeter.git`
 2. Navigate to the project directory: `cd DiscordRoleSheeter`
