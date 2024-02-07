@@ -1,6 +1,6 @@
 # DiscordRoleSheeter
 
-DiscordRoleSheeter is a GUI application designed to manage user roles in a Discord server. It fetches members and roles from a specified Discord guild in a `config.toml` file and exports the data into an Excel spreadsheet in the same folder. You can then make changes to the Excel sheet and push those changes back to Discord.
+DiscordRoleSheeter is a tool for efficient management of Discord server roles. It fetches roles and members from a Discord guild, allows modifications in an Excel spreadsheet, and pushes changes back to Discord, simplifying the process and reducing errors.
 
 ## Motivation
 
@@ -28,10 +28,10 @@ Either download from [releases](https://github.com/CaptainFallaway/DiscordRoleSh
 
 ## Usage
 
-1. Run the application to create the `config.toml` file, you'll be propmted to exit after file creation.
-2. Fill in the `config.toml` file with your bot token and guild id (Discord server id), save the file after.
-3. Open the app again and your good to go.
-4. The user experience should be friendly if you've read the context above and there is only three buttons and alot of information that will be provided about errors, warning and other statuses.
+1. Launch the application to generate the `config.toml` file. You'll be prompted to exit after the file is created.
+2. Populate the `config.toml` file with your bot token and guild id (Discord server id), then save the file.
+3. Reopen the application and you're all set.
+4. The interface is straightforward with only three buttons and detailed information provided for errors, warnings, and other statuses.
 
 ## Discord Bot Guide
 
