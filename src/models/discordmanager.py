@@ -2,7 +2,7 @@ from time import time
 from json import dumps
 from asyncio import sleep
 from aiohttp import ClientSession
-from helpers.constants import API_URI
+from helpers.constants import API_URI, DISCORD_MEMBER_LIMIT
 
 from helpers.dataclasses import (
     SnowFlake,
@@ -55,26 +55,40 @@ class DiscordManager:
             return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
 
     async def get_members(self) -> list[DiscordMember] | ErrorInfo:
-        # NOTE the limit is 1000, if the server has more than 1000 members, we need to implement pagination
-        resp = await self._dc_req("GET", f"/guilds/{self.guild_id}/members?limit=1000")
+        after = "0"
+        members = []
 
-        if resp.ok:
-            arr = [DiscordMember(**member) for member in resp.json_data]
-
-            # Filter out the bots
-            arr = list(
-                filter(
-                    lambda member: not member.user.bot,
-                    arr
+        while True:
+            resp = await self._dc_req(
+                "GET",
+                f"/guilds/{self.guild_id}/members?limit={DISCORD_MEMBER_LIMIT}&after={after}"
                 )
-            )
 
-            # Sort the members by the ammount of roles they have
-            arr = sorted(arr, key=lambda member: len(member.roles))[::-1]
+            if resp.ok:
+                arr = [DiscordMember(**member) for member in resp.json_data]
+                len_members = len(arr)
+                last_usr_id = arr[-1].user.id
 
-            return arr
-        else:
-            return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
+                members.extend(arr)
+
+                if len_members < DISCORD_MEMBER_LIMIT:
+                    break
+
+                after = last_usr_id
+            else:
+                return ErrorInfo(message=dumps(resp.json_data, indent=4) + f"\ncode: {resp.status}")
+
+        # Filter out the bots and sort the users with the most roles to the top
+        members = sorted(
+            filter(
+                lambda member: not member.user.bot,
+                members
+            ),
+            key=lambda member: len(member.roles),
+            reverse=True
+        )
+
+        return list(members)
 
     async def apply_changes(self, changes: list[MemberChanges]) -> None | ErrorInfo:
         for change in changes:

@@ -46,7 +46,7 @@ Either download from [releases](https://github.com/CaptainFallaway/DiscordRoleSh
 
 - [ ] Make a websocket connection run as a background task to update bot discord presence.
 - [ ] Better errors from discord instead of raw ones from the request.
-- [ ] Implement pagination for fetching guild members (only supports up to 1000 members at the moment...)
+- [x] Implement pagination for fetching guild members (only supports up to 1000 members at the moment...)
 
 ## License
 

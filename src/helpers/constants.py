@@ -9,6 +9,7 @@ WINDOW_TITLE = "Discord Role Sheeter - By captainfallaway"
 # Discord API Constants
 
 API_URI = "https://discord.com/api/v10"
+DISCORD_MEMBER_LIMIT = 1000
 
 
 # Kivy Lang Path Constants
