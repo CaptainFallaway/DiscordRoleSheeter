@@ -24,6 +24,9 @@ class ExcelReader:
 
         metadata_members = {}
         for column in metadata_sheet.iter_cols():
+            if len(column) != 5:
+                return ErrorInfo(message="Fatal excel sheet error. [b]Please pull again.[/b]")
+
             user_id = str(column[2].value)
             username = column[3].value
             roles = column[4].value.split("|")
